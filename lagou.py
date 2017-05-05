@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+'''spider for https://www.lagou.com'''
+
 import time
 import csv
 import os
@@ -7,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 
-LAGOU_URL = 'https://www.lagou.com/gongsi/j%d.html'
+LAGOU_URL = r'https://www.lagou.com/gongsi/j%d.html'
 COMPANY = {
     '腾讯': 451,
     '阿里优酷': 1914,
@@ -19,28 +21,39 @@ COMPANY = {
     '百度外卖': 104601
     }
 
-SLEEPTIME = 3
+SLEEPTIME = 3 #seconds
 
-class JobInfo:
-    def __init__(self, company, filter, title, salaryMin, salaryMax, exp, edu):
+class JobInfo(object):
+    '''Job Object'''
+    def __init__(self, company, job_filter, title, salary_min, salary_max, exp, edu):
         self.company = company
-        self.filter = filter
+        self.filter = job_filter
         self.title = title
-        self.salary_min = salaryMin
-        self.salary_max = salaryMax
+        self.salary_min = salary_min
+        self.salary_max = salary_max
         self.exp = exp
         self.edu = edu
 
     @staticmethod
     def header():
+        '''csv file header'''
         return ["公司", "类别", "职位", "薪酬区间低", "薪酬区间高", "经验要求", "学历要求"]
 
     def array(self):
-        return [self.company, self.filter, self.title, self.salary_min, self.salary_max, self.exp, self.edu]
+        '''object to array'''
+        return [self.company,
+                self.filter,
+                self.title,
+                self.salary_min,
+                self.salary_max,
+                self.exp,
+                self.edu]
 
 
-def lagouPage(browser, jobList, companyName, jobFilter):
-    con_list_item = WebDriverWait(browser, SLEEPTIME).until(lambda x: x.find_elements_by_class_name("con_list_item"))
+def lagou_page(browser, job_list, company_name, job_filter):
+    '''filter for every page'''
+    con_list_item = WebDriverWait(browser, SLEEPTIME)\
+        .until(lambda x: x.find_elements_by_class_name("con_list_item"))
     for item in con_list_item:
         job = item.text.split('\n')
         job_title = job[0]
@@ -61,90 +74,104 @@ def lagouPage(browser, jobList, companyName, jobFilter):
         if ' ' in job_edu:
             job_edu = job_edu.strip(' ')
 
-        jobList.append(JobInfo(companyName, jobFilter, job_title, job_salary_min, job_salary_max, job_exp, job_edu))
-        print(job_title)
-        print(job_salary_min)
-        print(job_salary_max)
-        print(job_exp)
-        print(job_edu)
+        job = JobInfo(company_name,
+                      job_filter,
+                      job_title,
+                      job_salary_min,
+                      job_salary_max,
+                      job_exp,
+                      job_edu)
+        job_list.append(job)
+        print job_title
+        print job_salary_min
+        print job_salary_max
+        print job_exp
+        print job_edu
 
-def getNextSpan(spans):
+
+def get_next_span(spans):
+    '''find next page button'''
     for span in spans:
-        print(span.text)
+        print span.text
         if span.text == '下一页':
             if span.get_attribute('class') == 'next':
                 return span
     return None
 
-def lagouFilter(browser, jobList, companyName, jobFilter):
+def lagou_filter(browser, job_list, company_name, job_filter):
+    '''filter by job types'''
     while True:
-        lagouPage(browser, jobList, companyName, jobFilter)
+        lagou_page(browser, job_list, company_name, job_filter)
         #check next page
         try:
             pages = browser.find_element_by_class_name('pages')
             spans = pages.find_elements_by_tag_name('span')
-            span = getNextSpan(spans)
+            span = get_next_span(spans)
             if span is not None:
                 span.click()
                 time.sleep(SLEEPTIME)
             else:
                 return
-        except NoSuchElementException as e:
-            print(e)
+        except NoSuchElementException as no_such_element_exp:
+            print no_such_element_exp
             return
 
 
-def lagouCompany(browser, companyName, companyNumber):
-    companyURL = LAGOU_URL % int(companyNumber)
-    companyJobList = []
-    browser.get(companyURL)
+def lagou_company(browser, company_name, company_number):
+    '''filter for certain company'''
+    company_url = LAGOU_URL % int(company_number)
+    company_job_list = []
+    browser.get(company_url)
     time.sleep(SLEEPTIME*3)
     while True:
         try:
-            print(browser.title)
-            con_filter_li = WebDriverWait(browser, SLEEPTIME).until(lambda x: x.find_elements_by_class_name("con_filter_li"))
-            for li in con_filter_li:
-                print(li.text)
-                if li.text == '全部':
-                    print("skip")
+            print browser.title
+            con_filter_li = WebDriverWait(browser, SLEEPTIME)\
+                .until(lambda x: x.find_elements_by_class_name("con_filter_li"))
+            for line in con_filter_li:
+                print line.text
+                if line.text == '全部':
+                    print "skip"
                     continue
-                li.click()
+                line.click()
                 time.sleep(SLEEPTIME)
-                lagouFilter(browser, companyJobList, companyName, li.text)
-        except NoSuchElementException as e:
-            print(e)
-            companyJobList.clear()
+                lagou_filter(browser, company_job_list, company_name, line.text)
+        except NoSuchElementException as no_such_element_exp:
+            print no_such_element_exp
+            del company_job_list[:]
+            # company_job_list.clear() only work for python3
             browser.refresh()
             time.sleep(SLEEPTIME*3)
         else:
             #save result to company file
-            saveFile = os.path.join(os.getcwd(), companyName + '.csv')
-            with open(saveFile, 'w', newline='') as f:
-                writer = csv.writer(f)
+            save_file = os.path.join(os.getcwd(), company_name + '.csv')
+            with open(save_file, 'w', newline='') as save_file_handler:
+                writer = csv.writer(save_file_handler)
                 writer.writerow(JobInfo.header())
-                for job in companyJobList:
+                for job in company_job_list:
                     writer.writerow(job.array())
             return
 
 
-def lagou(browser, companyNumber):
-    print("lagou start")
-    for k, v in COMPANY.items():
-        if companyNumber is not None:
-            if int(v) == int(companyNumber):
-                lagouCompany(browser, k, v)
+def lagou(browser, company_number):
+    '''lagou entity: target one company or all.'''
+    print "lagou start"
+    for name, code in COMPANY.items():
+        if company_number is not None:
+            if int(code) == int(company_number):
+                lagou_company(browser, name, code)
                 break
         else:
-            lagouCompany(browser, k, v)
-    print("lagou end")
+            lagou_company(browser, name, code)
+    print "lagou end"
 
 
 if __name__ == "__main__":
-    _browser = webdriver.Chrome()
-    #implicitly_wait seems can not wait until ajax loading complete
+    BROWSER = webdriver.Chrome()
+    #implicitly_wait seems can not waiting for Ajax loading complete
     #_browser.implicitly_wait(TIMEOUT)
-    singleCompany = None
+    SINGLE_COMPANY = None
     if len(sys.argv) > 1:
-        singleCompany = sys.argv[1]
-    lagou(_browser, singleCompany)
-    _browser.quit()
+        SINGLE_COMPANY = sys.argv[1]
+    lagou(BROWSER, SINGLE_COMPANY)
+    BROWSER.quit()
