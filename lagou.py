@@ -4,6 +4,7 @@
 import time
 import csv
 import os
+import codecs
 import sys
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,14 +12,14 @@ from selenium.common.exceptions import NoSuchElementException
 
 LAGOU_URL = r'https://www.lagou.com/gongsi/j%d.html'
 COMPANY = {
-    '腾讯': 451,
-    '阿里优酷': 1914,
-    '阿里高德': 91,
-    '阿里天猫': 52840,
-    '阿里UC': 2202,
-    '阿里神马搜索': 90948,
-    '百度': 1575,
-    '百度外卖': 104601
+    u'腾讯': 451,
+    u'阿里优酷': 1914,
+    u'阿里高德': 91,
+    u'阿里天猫': 52840,
+    u'阿里UC': 2202,
+    u'阿里神马搜索': 90948,
+    u'百度': 1575,
+    u'百度外卖': 104601
     }
 
 SLEEPTIME = 3 #seconds
@@ -37,7 +38,7 @@ class JobInfo(object):
     @staticmethod
     def header():
         '''csv file header'''
-        return ["公司", "类别", "职位", "薪酬区间低", "薪酬区间高", "经验要求", "学历要求"]
+        return [u"公司", u"类别", u"职位", u"薪酬区间低", u"薪酬区间高", u"经验要求", u"学历要求"]
 
     def array(self):
         '''object to array'''
@@ -68,8 +69,8 @@ def lagou_page(browser, job_list, company_name, job_filter):
         job_exp = job_desc[0]
         if ' ' in job_exp:
             job_exp = job_exp.strip(' ')
-        if '经验' in job_exp:
-            job_exp = job_exp.lstrip('经验')
+        if u'经验' in job_exp:
+            job_exp = job_exp.lstrip(u'经验')
         job_edu = job_desc[1]
         if ' ' in job_edu:
             job_edu = job_edu.strip(' ')
@@ -93,7 +94,7 @@ def get_next_span(spans):
     '''find next page button'''
     for span in spans:
         print span.text
-        if span.text == '下一页':
+        if span.text == u'下一页':
             if span.get_attribute('class') == 'next':
                 return span
     return None
@@ -130,7 +131,7 @@ def lagou_company(browser, company_name, company_number):
                 .until(lambda x: x.find_elements_by_class_name("con_filter_li"))
             for line in con_filter_li:
                 print line.text
-                if line.text == '全部':
+                if line.text == u'全部':
                     print "skip"
                     continue
                 line.click()
@@ -145,7 +146,7 @@ def lagou_company(browser, company_name, company_number):
         else:
             #save result to company file
             save_file = os.path.join(os.getcwd(), company_name + '.csv')
-            with open(save_file, 'w', newline='') as save_file_handler:
+            with codecs.open(save_file, 'w', 'utf-8') as save_file_handler:
                 writer = csv.writer(save_file_handler)
                 writer.writerow(JobInfo.header())
                 for job in company_job_list:
