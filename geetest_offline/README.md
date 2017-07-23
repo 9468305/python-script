@@ -84,8 +84,19 @@ distance，rand0，rand1，这3个参数都是随机生成，但是如果写代�
 上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
 ### 3. Demo Source Code
 [GitHub geetest_offline](https://github.com/9468305/script/tree/master/geetest_offline)  
+使用python 2.7.13实现  
+安装依赖：  
+```
+pip install requests # HTTP库
+pip install PyExecJS # python调用JavaScript, 配合node.js更佳
+pip install beautifulsoup4 # 解析HTML页面
+```
+运行Demo：  
 ```
 python gsxt_shanghai.py
 python gsxt_hebei.py
 python gsxt_neimenggu.py
 ```
+具体实现：  
+`geetest_offline.py`  
+`geetest_offline_nm.py` HTTP Request&Response 略有不同。  
