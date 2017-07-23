@@ -31,8 +31,10 @@ offline模式的离线验证，网站后台自行验证，GeeTest后台 [http://
   
 ### 2. offline模式验证流程  
 以上海站点为例 [http://sh.gsxt.gov.cn](http://sh.gsxt.gov.cn)  
-#### 2.1 GET 首页 http://sh.gsxt.gov.cn/notice/ ，返回HTML页面，获得session.token。  
-#### 2.2 GET register http://sh.gsxt.gov.cn/notice/pc-geetest/register ，返回JSON数据，获得  
+#### 2.1 GET 首页 http://sh.gsxt.gov.cn/notice/  
+返回HTML页面，解析得到session.token。  
+#### 2.2 GET register http://sh.gsxt.gov.cn/notice/pc-geetest/register  
+返回JSON数据  
 ```
 {
     "success":0,
@@ -41,21 +43,23 @@ offline模式的离线验证，网站后台自行验证，GeeTest后台 [http://
 }
 ```
 success = 0 表示启用 offline 验证模式。  
-#### 2.3 POST http://sh.gsxt.gov.cn/notice/security/verify_ip ，返回200 True，表示成功。  
-#### 2.4 POST http://sh.gsxt.gov.cn/notice/security/verify_keyword ，返回200 True，表示成功。  
+#### 2.3 POST http://sh.gsxt.gov.cn/notice/security/verify_ip  
+返回200 True，表示成功。  
+#### 2.4 POST http://sh.gsxt.gov.cn/notice/security/verify_keyword  
+返回200 True，表示成功。  
 #### 2.5 POST http://sh.gsxt.gov.cn/notice/pc-geetest/validate  
-这里需要上传滑块验证码的本地验证数据，简称validate。返回JSON数据，获得  
+上传滑块验证码的本地验证结果数据，简称validate。返回JSON数据  
 ```
 {
     "status":"success",
     "version":"3.3.0"
 }
 ```  
-offline模式下，后台根本不知道浏览器使用了哪张滑块验证码图片，只知道浏览器上传了验证结果的数据。所以完全可以省略下载验证码图片，进行图像识别，计算滑块移动位置，模拟鼠标滑动轨迹这些步骤。   
+offline模式，后台根本不知道浏览器使用哪张滑块验证码图片，只知道浏览器上传了验证结果的数据。所以完全可以省略下载验证码图片，进行图像识别，计算滑块移动位置，模拟鼠标滑动轨迹这些步骤。   
 **验证数据的格式**  
 例如：1517aab3f_51aa460f_75555a6a38，其中以_分隔的3段数据是由geetest.5.x.x.js中的distance, rand0, rand1加密混淆得到。  
 具体加密过程分析详见 [寻找阿登高地——爬虫工程师如何绕过验证码](http://www.jianshu.com/p/5b6fb04ea686) 。  
-其实可以不用关心加密算法，只要找到JavaScript具体加密方法，直接传入参数执行即可，如下：  
+其实不用关心加密算法的实现细节，只需找到JavaScript调用入口，传入参数执行即可：  
 ```
 function userresponse(a, b) {
         for (var c = b.slice(32), d = [], e = 0; e < c.length; e++) {
@@ -75,9 +79,9 @@ function userresponse(a, b) {
 **3个参数的正确生成**  
 distance，rand0，rand1，这3个参数都是随机生成，但是如果写代码直接随机生成，会发现验证成功率不高，那么这3个参数之间存在什么隐藏关联关系？后台是如何校验这3个随机数的正确性？  
 其实它们之间存在什么关系不重要，重要的是能够成功通过验证。  
-所以只需人工采样N次，构造足够的样本数组，每次随机选取1个，调用JavaScript加密方法，得到验证数据即可。  
+只需人工采样N次，构造足够的样本数组，每次随机选取1个，调用JavaScript加密方法，得到验证数据即可。  
 #### 2.6 POST http://sh.gsxt.gov.cn/notice/search/ent_info_list  
-这里需要上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
+上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
 ### 3. Demo Source Code
 [GitHub geetest_offline](https://github.com/9468305/script/tree/master/geetest_offline)  
 ```
