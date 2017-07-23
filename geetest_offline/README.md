@@ -83,7 +83,7 @@ distance，rand0，rand1，这3个参数都是随机生成，但是如果写代�
 #### 2.6 POST http://sh.gsxt.gov.cn/notice/search/ent_info_list  
 上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
 ### 3. Demo Source Code
-[GitHub](https://github.com/9468305/script/tree/master/geetest_offline), python 2.7.13  
+[GitHub](https://github.com/9468305/script/tree/master/geetest_offline), Python 2.7.13  
 Install：  
 ```
 pip install requests # HTTP库
