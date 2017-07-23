@@ -31,8 +31,8 @@ offline模式的离线验证，网站后台自行验证，GeeTest后台 [http://
   
 ### 2. offline模式验证流程  
 以上海站点为例 [http://sh.gsxt.gov.cn](http://sh.gsxt.gov.cn)  
-1. GET 首页 http://sh.gsxt.gov.cn/notice/ ，返回HTML页面，获得session.token。  
-2. GET register http://sh.gsxt.gov.cn/notice/pc-geetest/register ，返回JSON数据，获得  
+#### 2.1 GET 首页 http://sh.gsxt.gov.cn/notice/ ，返回HTML页面，获得session.token。  
+#### 2.2 GET register http://sh.gsxt.gov.cn/notice/pc-geetest/register ，返回JSON数据，获得  
 ```
 {
     "success":0,
@@ -41,9 +41,9 @@ offline模式的离线验证，网站后台自行验证，GeeTest后台 [http://
 }
 ```
 success = 0 表示启用 offline 验证模式。  
-3. POST http://sh.gsxt.gov.cn/notice/security/verify_ip ，返回200 True，表示成功。  
-4. POST http://sh.gsxt.gov.cn/notice/security/verify_keyword ，返回200 True，表示成功。  
-5. POST http://sh.gsxt.gov.cn/notice/pc-geetest/validate  
+#### 2.3 POST http://sh.gsxt.gov.cn/notice/security/verify_ip ，返回200 True，表示成功。  
+#### 2.4 POST http://sh.gsxt.gov.cn/notice/security/verify_keyword ，返回200 True，表示成功。  
+#### 2.5 POST http://sh.gsxt.gov.cn/notice/pc-geetest/validate  
 这里需要上传滑块验证码的本地验证数据，简称validate。返回JSON数据，获得  
 ```
 {
@@ -76,7 +76,7 @@ function userresponse(a, b) {
 distance，rand0，rand1，这3个参数都是随机生成，但是如果写代码直接随机生成，会发现验证成功率不高，那么这3个参数之间存在什么隐藏关联关系？后台是如何校验这3个随机数的正确性？  
 其实它们之间存在什么关系不重要，重要的是能够成功通过验证。  
 所以只需人工采样N次，构造足够的样本数组，每次随机选取1个，调用JavaScript加密方法，得到验证数据即可。  
-6. POST http://sh.gsxt.gov.cn/notice/search/ent_info_list  
+#### 2.6 POST http://sh.gsxt.gov.cn/notice/search/ent_info_list  
 这里需要上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
 ### 3. Demo Source Code
 [GitHub geetest_offline](https://github.com/9468305/script/tree/master/geetest_offline)  
