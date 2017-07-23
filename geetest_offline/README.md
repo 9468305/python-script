@@ -92,10 +92,10 @@ pip install beautifulsoup4 # 解析HTML页面
 ```
 Run demo：  
 ```
-python gsxt_shanghai.py
-python gsxt_hebei.py
-python gsxt_neimenggu.py
+python ./gsxt_shanghai.py
+python ./gsxt_hebei.py
+python ./gsxt_neimenggu.py
 ```
 Implementation：    
-`geetest_offline.py`  for shanghai， hebei。
-`geetest_offline_nm.py` for neimenggu， HTTP Request&Response 略有不同。  
+[geetest_offline.py](/geetest_offline.py)  for shanghai， hebei。  
+[geetest_offline_nm.py](/geetest_offline_nm.py) for neimenggu， HTTP Request&Response 略有不同。  
