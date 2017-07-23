@@ -14,9 +14,5 @@ pip install requests
 ```
 pip install openpyxl
 ```
-6. [geetest_offline](/geetest_offline) - GeeTest offline mode crack, for example **gsxt web site**  
-```
-pip install requests
-pip install PyExecJS
-pip install beautifulsoup4
-```
+6. [geetest_offline](/geetest_offline) - GeeTest offline mode crack, for example **gsxt**  
+see [geetest_offline/README.md](/geetest_offline/README.md)  
