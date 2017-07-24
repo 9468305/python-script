@@ -1,12 +1,13 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''合并指定文件夹下所有Excel文件到同一个文件'''
 import os
 import collections
+import operator
 from openpyxl import load_workbook
 from openpyxl import Workbook
 
-EXCEL_SUFFIX = ['.xls', '.xlsx']
+EXCEL_SUFFIX = ['.xlsx']
 
 def search_file(from_dir, suffix):
     '''遍历from_dir文件夹，查找符合suffix后缀名的文件，返回结果列表'''
@@ -26,7 +27,7 @@ def search_excel(from_dir, to_file):
     try:
         _result.remove(os.path.join(from_dir, to_file))
     except ValueError:
-        print ''
+        print('')
     return _result
 
 
@@ -71,10 +72,11 @@ def combine(from_dir, to_file):
         _title, _items = load_excel(_file)
         if not _title or not _items:
             continue
+
         if not _excel_title:
             _excel_title = _title
-        elif cmp(_title, _excel_title) != 0:
-            print 'Warning: Excel title Not Same!'
+        elif not operator.eq(_title, _excel_title):
+            print('Warning: Excel title Not Same!')
 
         for _k, _v in _items.items():
             _excel_content[_k] = _v
@@ -85,6 +87,8 @@ def combine(from_dir, to_file):
 
 
 if __name__ == "__main__":
+    print('main begin')
     FROM_DIR = os.getcwd()
     TO_FILE = os.path.join(os.getcwd(), 'combine.xlsx')
     combine(FROM_DIR, TO_FILE)
+    print('main end')
