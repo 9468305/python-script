@@ -16,3 +16,12 @@ pip install openpyxl
 ```
 6. [geetest_offline](/geetest_offline) - GeeTest offline mode crack, for example **gsxt**  
 see [geetest_offline/README.md](/geetest_offline/README.md)  
+7. [auc_pr_roc.py](/auc_pr_roc.py) - Calculate AUC of PR or ROC curve by sklearn.  
+**for Python3.6 Win32**  
+[Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/)  
+```
+pip install http://www.lfd.uci.edu/~gohlke/pythonlibs/ru4fxw3r/numpy-1.13.1+mkl-cp36-cp36m-win32.whl
+pip install http://www.lfd.uci.edu/~gohlke/pythonlibs/ru4fxw3r/scipy-0.19.1-cp36-cp36m-win32.whl
+pip install pandas
+pip install scikit-learn
+```
