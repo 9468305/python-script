@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''
 全国组织机构代码管理中心
@@ -10,6 +10,10 @@ import os
 import logging
 import requests
 import constants
+
+USE_LEVELDB = False
+if USE_LEVELDB:
+    import leveldb
 
 # Set default logging handler to avoid "No handler found" warnings.
 try:  # Python 2.7+
@@ -137,7 +141,10 @@ def query_once():
 
 def query_batch():
     '''query batch by leveldb'''
-    import leveldb
+    if not USE_LEVELDB:
+        logging.error('leveldb disabled')
+        return
+
     query_db_file = os.path.join(os.getcwd(), 'data', 'query.db')
     query_db = leveldb.LevelDB(query_db_file)
 
