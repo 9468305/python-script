@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-geetest相关常用公共function
+geetest常用公共方法
 '''
 
 SPLIT_ARRAY_JS = '''

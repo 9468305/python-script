@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''Analyse git branch commit log, for every version, every person.'''
 import os
