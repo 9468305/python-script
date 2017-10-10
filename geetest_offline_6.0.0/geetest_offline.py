@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''
-geetest offline 6.0.0 spider for gsxt 广东
+geetest offline 6.0.0 spider for gd.gsxt.org.cn
 '''
 
 import os
@@ -10,11 +10,13 @@ import random
 import logging
 import traceback
 import json
+
 import requests
 import execjs
 from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 from openpyxl import Workbook
+
 import constants
 import util
 
@@ -39,11 +41,11 @@ USERRESPONSE_JSCONTEXT = JSRUNTIME.compile(util.USERRESPONSE_JS)
 
 TIMEOUT = 15
 
-def load_lists_excel(excel_file):
-    '''加载lists excel文件，仅有一列公司名称数据，作为查询keyword。'''
+def load_excel_list(excel_file):
+    '''加载list excel文件，仅有一列公司名称数据，作为查询keyword。'''
     _items = []
     if not os.path.isfile(excel_file):
-        logging.info("Excel File Not Exist")
+        logging.info(excel_file + " Not Exist.")
         return _items
 
     _wb = load_workbook(excel_file, read_only=True)
@@ -59,12 +61,39 @@ def load_lists_excel(excel_file):
     _wb.close()
     logging.debug(_title)
     logging.debug(_items)
-    logging.debug(len(_items))
+    logging.info(len(_items))
     return _items
 
 
-def save_result_excel(excel_file, results):
-    '''save result excel'''
+def load_json(json_file):
+    '''load json file'''
+    if not os.path.isfile(json_file):
+        logging.info("Json File Not Exist")
+        return None
+    with open(json_file, 'r', encoding='utf8') as _f:
+        json_data = json.load(_f)
+        logging.info(len(json_data))
+        return json_data
+
+
+def save_json(json_file, json_data):
+    '''save json file'''
+    with open(json_file, 'w', encoding='utf8') as _f:
+        json.dump(json_data, _f, indent=2, sort_keys=True, ensure_ascii=False)
+    logging.info(len(json_data))
+
+
+def excel_to_json(excel_file, json_file):
+    '''convert excel file to json file'''
+    lists = load_excel_list(excel_file)
+    save_json(json_file, lists)
+
+
+def json_to_excel(json_file, excel_file):
+    '''convert json file to excel file'''
+    json_data = load_json(json_file)
+    if not json_data:
+        return
     _wb = Workbook()
     _ws = _wb.active
     _ws.append(['企业名称',
@@ -81,62 +110,31 @@ def save_result_excel(excel_file, results):
                 '住所',
                 '经营范围'
                ])
-    for _r in results:
-        _ws.append([_r['企业名称'],
-                    _r['注册号/统一社会信用代码'],
-                    _r['类型'],
-                    _r['法定代表人'],
-                    _r['注册资本'],
-                    _r['成立日期'],
-                    _r['营业期限自'],
-                    _r['营业期限至'],
-                    _r['登记机关'],
-                    _r['核准日期'],
-                    _r['登记状态'],
-                    _r['住所'],
-                    _r['经营范围']
+    for _, detail in json_data.items():
+        _ws.append([detail.get('企业名称', ""),
+                    detail.get('注册号/统一社会信用代码', ""),
+                    detail.get('类型', ""),
+                    detail.get('法定代表人', ""),
+                    detail.get('注册资本', ""),
+                    detail.get('成立日期', ""),
+                    detail.get('营业期限自', ""),
+                    detail.get('营业期限至', ""),
+                    detail.get('登记机关', ""),
+                    detail.get('核准日期', ""),
+                    detail.get('登记状态', ""),
+                    detail.get('住所', ""),
+                    detail.get('经营范围', "")
                    ])
     _wb.save(excel_file)
 
 
-def load_json(json_file):
-    '''load json file'''
-    if not os.path.isfile(json_file):
-        logging.info("Json File Not Exist")
-        return None
-
-    with open(json_file, 'r', encoding='utf8') as _f:
-        json_data = json.load(_f)
-        logging.info(len(json_data))
-        return json_data
-
-
-def save_json(json_file, json_data):
-    '''save json file'''
-    with open(json_file, 'w', encoding='utf8') as _f:
-        json.dump(json_data, _f, indent=2, sort_keys=True, ensure_ascii=False)
-    logging.info(len(json_data))
-
-
-def excel_to_json(excel_file, json_file):
-    '''convert excel file to json file'''
-    lists = load_lists_excel(excel_file)
-    logging.info(len(lists))
-    save_json(json_file, lists)
-
-
-def json_to_excel(json_file, excel_file):
-    '''convert json file to excel file'''
-    print('todo')
-
-
 def calc_userresponse(distance, challenge):
-    '''根据滑动距离distance和challenge，计算userresponse值'''
+    '''根据滑动距离 distance 和 challenge ，计算 userresponse。'''
     return USERRESPONSE_JSCONTEXT.call('userresponse', distance, challenge)
 
 
 def calc_validate(challenge):
-    '''计算validate值'''
+    '''calculate validate'''
     _r = random.randint(0, len(util.OFFLINE_SAMPLE)-1)
     distance, rand0, rand1 = util.OFFLINE_SAMPLE[_r]
     distance_r = calc_userresponse(distance, challenge)
@@ -169,7 +167,10 @@ def parse_name_url(html_doc):
 
 
 def get_mainpage(session):
-    '''Get mainpage'''
+    '''
+    Get http://gd.gsxt.gov.cn
+    Response Code 200
+    '''
     logging.debug('GET ' + INDEX)
     _headers = {'Accept': constants.ACCEPT_HTML,
                 'Accept-Language': constants.ACCEPT_LANGUAGE,
@@ -182,7 +183,7 @@ def get_mainpage(session):
 def get_captcha(session):
     '''
     GET /aiccips//verify/start.html
-    Response
+    Response JSON
     {
 	    "success": 0,
 	    "gt": "c02ee51ee0afe88899efe6dc729627fc",
@@ -208,7 +209,7 @@ def get_captcha(session):
 def post_validate(session, challenge, validate, keyword):
     '''
     POST /aiccips/verify/sec.html
-    Response
+    Response JSON
     {
 	    "status": "success",
 	    "textfield": "waY5F5lZyxvKw9bMM4nBs7HUgWS1SRpagFutRKqs/+DkRqCIS9N4PUCqM9fmrbg1",
@@ -238,7 +239,10 @@ def post_validate(session, challenge, validate, keyword):
 
 
 def post_search(session, textfield):
-    '''POST /aiccips/CheckEntContext/showCheck.html'''
+    '''
+    POST /aiccips/CheckEntContext/showCheck.html
+    Response HTML WebPage
+    '''
     _url = INDEX + '/aiccips/CheckEntContext/showCheck.html'
     logging.debug('POST ' + _url)
     _headers = {'Accept': constants.ACCEPT_HTML,
@@ -258,7 +262,7 @@ def post_search(session, textfield):
 
 
 def get_validate(session, keyword):
-    '''循环进行validate验证'''
+    '''safe loop post validate'''
     for _ in range(10):
         captcha = get_captcha(session)
         if not captcha:
