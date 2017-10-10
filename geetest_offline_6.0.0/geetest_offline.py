@@ -37,9 +37,7 @@ JSRUNTIME = execjs.get(execjs.runtime_names.Node)
 
 USERRESPONSE_JSCONTEXT = JSRUNTIME.compile(util.USERRESPONSE_JS)
 
-TIMEOUT = 60
-
-NOTFOUND = []
+TIMEOUT = 15
 
 def load_lists_excel(excel_file):
     '''加载lists excel文件，仅有一列公司名称数据，作为查询keyword。'''
@@ -63,16 +61,6 @@ def load_lists_excel(excel_file):
     logging.debug(_items)
     logging.debug(len(_items))
     return _items
-
-
-def load_lists_json(json_file):
-    '''加载json文件'''
-    if not os.path.isfile(json_file):
-        logging.info("Json File Not Exist")
-        return []
-
-    with open(json_file, 'r', encoding='utf8') as _f:
-        return json.load(_f)
 
 
 def save_result_excel(excel_file, results):
@@ -115,16 +103,19 @@ def load_json(json_file):
     '''load json file'''
     if not os.path.isfile(json_file):
         logging.info("Json File Not Exist")
-        return []
+        return None
 
     with open(json_file, 'r', encoding='utf8') as _f:
-        return json.load(_f)
+        json_data = json.load(_f)
+        logging.info(len(json_data))
+        return json_data
 
 
 def save_json(json_file, json_data):
     '''save json file'''
     with open(json_file, 'w', encoding='utf8') as _f:
         json.dump(json_data, _f, indent=2, sort_keys=True, ensure_ascii=False)
+    logging.info(len(json_data))
 
 
 def excel_to_json(excel_file, json_file):
@@ -156,13 +147,13 @@ def calc_validate(challenge):
     return validate
 
 
-def parse_code(html_doc):
+def parse_name_url(html_doc):
     '''使用BeautifulSoup解析HTML页面，查找详情链接'''
     _soup = BeautifulSoup(html_doc, 'html.parser')
     _findall = _soup.find_all('div',
                               class_="clickStyle",
                               style='margin-left: 160px;padding-left: 10px;')
-    _result = []
+    name_url_array = []
     if _findall:
         for _a in _findall:
             _company = _a.find('a')
@@ -170,12 +161,11 @@ def parse_code(html_doc):
             _url = _company['href']
             if _url.startswith('../'):
                 _url = INDEX + '/aiccips/CheckEntContext/' + _url
-            _result.append((_name, _url))
-            break
+            name_url_array.append((_name, _url))
+        logging.info(name_url_array)
     else:
         logging.error('Company Link Not Found')
-    logging.info(_result)
-    return _result
+    return name_url_array
 
 
 def get_mainpage(session):
@@ -247,7 +237,7 @@ def post_validate(session, challenge, validate, keyword):
     return _json_obj['textfield'] if _json_obj['status'] == 'success' else None
 
 
-def post_search(session, keyword, textfield):
+def post_search(session, textfield):
     '''POST /aiccips/CheckEntContext/showCheck.html'''
     _url = INDEX + '/aiccips/CheckEntContext/showCheck.html'
     logging.debug('POST ' + _url)
@@ -264,11 +254,7 @@ def post_search(session, keyword, textfield):
     logging.debug('response text: ' + _response.text)
     if _response.status_code != 200:
         return None
-    page = parse_code(_response.text)
-    if not page:
-        global NOTFOUND
-        NOTFOUND.append(keyword)
-    return page
+    return parse_name_url(_response.text)
 
 
 def get_validate(session, keyword):
@@ -285,17 +271,17 @@ def get_validate(session, keyword):
     return None
 
 
-def parse_company(html_doc):
-    '''parse company info'''
+def parse_detail(html_doc):
+    '''parse company detail'''
     _soup = BeautifulSoup(html_doc, 'html.parser')
     _yyzz = _soup.find('div', class_='item_box', id='yyzz')
     if not _yyzz:
-        logging.error('Company Info Not Found')
+        logging.error('Detail yyzz Not Found')
         return None
 
     _li_all = _yyzz.find_all('li')
     if not _li_all:
-        logging.error("Company Detail Not Found")
+        logging.error("Detail li Not Found")
         return None
 
     _info = {}
@@ -304,20 +290,22 @@ def parse_company(html_doc):
         _k, _v = _text.split(sep='：', maxsplit=1)
         _info[_k] = _v
     logging.info(_info)
+    if not _info['企业名称']:
+        _info = None # for safe
     return _info
 
 
-def parse_company_2(html_doc):
-    '''parse company info 2'''
+def parse_detail_2(html_doc):
+    '''parse company detail 2'''
     _soup = BeautifulSoup(html_doc, 'html.parser')
     _table = _soup.find('table', cellspacing='6')
     if not _table:
-        logging.error('Company Info table Not Found')
+        logging.error('Detail table Not Found')
         return None
 
     _tr_all = _table.find_all('td')
     if not _tr_all:
-        logging.error("Company Detail td Not Found")
+        logging.error("Detail td Not Found")
         return None
 
     _info = {}
@@ -355,11 +343,36 @@ def parse_company_2(html_doc):
                 _info['经营范围'] = _v2
         _info['注册资本'] = '0'
     logging.info(_info)
+    if not _info['企业名称']:
+        _info = None # for safe
     return _info
 
 
-def get_company(session, url):
-    '''Get company detail'''
+def query_keyword(session, keyword):
+    '''query keyword'''
+    #if not get_mainpage(session):
+    #    return None
+    logging.info(keyword)
+    textfield = get_validate(session, keyword)
+    if textfield:
+        return post_search(session, textfield)
+    return None
+
+
+def safe_query_keyword(keyword):
+    '''Safe query keyword, handle network timeout and retry'''
+    for _ in range(5):
+        try:
+            with requests.Session() as session:
+                return query_keyword(session, keyword)
+        except requests.RequestException as _e:
+            traceback.print_exc()
+            time.sleep(5)
+    return None
+
+
+def query_detail(session, url):
+    '''query company detail url'''
     logging.debug('GET ' + url)
     _headers = {'Accept': constants.ACCEPT_HTML,
                 'Accept-Language': constants.ACCEPT_LANGUAGE,
@@ -368,72 +381,59 @@ def get_company(session, url):
     logging.debug('response code:' + str(_response.status_code))
     if _response.status_code == 200:
         if url.find('www.szcredit.org.cn') is not -1:
-            return parse_company(_response.text)
+            return parse_detail(_response.text)
         elif url.find('GSpublicityList.html') is not -1:
-            return parse_company_2(_response.text)
+            return parse_detail_2(_response.text)
         else:
-            logging.error('Url Type Not Support')
+            logging.error('URL Type Not Support')
     return None
 
 
-def is_done(key, json_data):
-    if json_data:
-        for _d in json_data:
-            if _d['企业名称'] == key:
-                return True
-    return False
-
-
-def is_notfound(key, array_data):
-    if array_data:
-        for _d in array_data:
-            if _d == key:
-                return True
-    return False
-
-
-def query(session, keyword):
-    '''query keyword'''
-    #if not get_mainpage(session):
-    #    return None
-    logging.info(keyword)
-    textfield = get_validate(session, keyword)
-    if not textfield:
-        return None
-
-    result = post_search(session, keyword, textfield)
-    if not result:
-        return None
-    results = []
-    for company in result:
-        _info = get_company(session, company[1])
-        if _info:
-            results.append(_info)
-    return results
+def safe_query_detail(url):
+    '''Safe query url, handle network timeout and retry'''
+    for _ in range(5):
+        try:
+            with requests.Session() as session:
+                return query_detail(session, url)
+        except requests.RequestException as _e:
+            traceback.print_exc()
+            time.sleep(5)
+    return None
 
 
 def main():
     '''main entry'''
-    lists = load_lists_json('list.json')
+    lists = load_json('list.json')
+    if not lists:
+        lists = []
     results = load_json('result.json')
-    try:
-        with requests.Session() as session:
-            for item in lists:
-                if is_done(item, results) or is_notfound(item, NOTFOUND):
-                    continue
-                result = query(session, item)
-                if result:
-                    results.extend(result)
-    except requests.RequestException as _e:
-        traceback.print_exc()
+    if not results:
+        results = {}
+    notfound = load_json('notfound.json')
+    if not notfound:
+        notfound = []
 
+    for keyword in lists:
+        if keyword in results:
+            continue
+        if keyword in notfound:
+            continue
+        name_url_array = safe_query_keyword(keyword)
+        if not name_url_array:
+            notfound.append(keyword)
+            continue
+        for name, url in name_url_array:
+            if name in results:
+                continue
+            detail_dict = safe_query_detail(url)
+            if detail_dict:
+                results.update({name : detail_dict})
     save_json('result.json', results)
+    save_json('notfound.json', notfound)
     logging.info('done')
 
 
 if __name__ == "__main__":
     #excel_to_json('list.xlsx', 'list.json')
     #json_to_excel('result.json', 'result.xlsx')
-    for _ in range(100):
-        main()
-        time.sleep(5)
+    main()
