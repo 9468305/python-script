@@ -1,9 +1,7 @@
 ## script
-1. [lagou.py](/lagou/lagou.py) - spider for [www.lagou.com](https://www.lagou.com).  
-```
-pip install -U selenium
-setup ChromeDriver
-```
+1. [geetest_offline_sh](/geetest_offline_sh) - Python破解GeeTest滑块验证码offline V5.10.10，以[国家企业信用信息公示系统（上海）](http://sh.gsxt.gov.cn)为例。  
+see [geetest_offline_sh/README.md](/geetest_offline_sh/README.md).  
+
 2. [gitstats.py](/gitstats/gitstats.py) - git log statistics script.  
 3. [ramdisk.sh](/ramdisk/ramdisk.sh) - create RAM Disk to speed up Xcode, Android Studio Integration.  
 4. [gsxt_mobile.py](/gsxt_mobile/gsxt_mobile.py) - 通过[国家企业信用信息公示系统](http://www.gsxt.gov.cn) Mobile App HTTP API 查询统一社会信用代码。  
@@ -14,8 +12,11 @@ pip install requests
 ```
 pip install openpyxl
 ```
-6. [geetest_offline](/geetest_offline) - GeeTest滑块验证码offline模式的破解，以[国家企业信用信息公示系统](http://www.gsxt.gov.cn)为例。  
-see [geetest_offline/README.md](/geetest_offline/README.md).  
+6. [lagou.py](/lagou/lagou.py) - spider for [www.lagou.com](https://www.lagou.com).  
+```
+pip install -U selenium
+setup ChromeDriver
+```
 7. [auc_pr_roc.py](/auc_pr_roc/auc_pr_roc.py) - Calculate AUC of PR or ROC curve by sklearn.  
 [Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/)  
 **For Python3.6 32bit**  
