@@ -17,11 +17,11 @@ def query_keyword(keyword):
     geetest_offline_nm.config(GSXT_HOST, GSXT_INDEX)
     try:
         with requests.Session() as session:
-            print keyword
+            print(keyword)
             _query_code = geetest_offline_nm.query_keyword(session, keyword)
             if _query_code:
                 for _r in _query_code:
-                    print _r[0] + ':' + _r[1]
+                    print(_r[0].decode(), ':', _r[1].decode())
         return True
     except requests.RequestException as _e:
         traceback.print_exc()

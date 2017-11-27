@@ -8,20 +8,12 @@ for gsxt 上海 河北
 import time
 import random
 import logging
+from logging import NullHandler
 import requests
 import execjs
 from bs4 import BeautifulSoup
 import constants
 import util
-
-# Set default logging handler to avoid "No handler found" warnings.
-try:  # Python 2.7+
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        '''NullHandler'''
-        def emit(self, record):
-            pass
 
 logging.getLogger(__name__).addHandler(NullHandler())
 logging.basicConfig(level=logging.DEBUG)
@@ -112,7 +104,7 @@ def get_register(session):
                 'User-Agent': constants.USER_AGENT,
                 'Referer': INDEX,
                 'X-Requested-With': 'XMLHttpRequest'}
-    _params = {'v': str(long(time.time() * 1000))}
+    _params = {'v': str(int(time.time() * 1000))}
     _response = session.get(_url, headers=_headers, params=_params, timeout=TIMEOUT)
     logging.debug('response code: ' + str(_response.status_code))
     logging.debug('response text: ' + _response.text)
@@ -259,4 +251,4 @@ def query(query_db, save_db, queryed_db):
 
 
 if __name__ == "__main__":
-    print 'call query()'
+    logging.info('call query()')

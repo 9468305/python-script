@@ -18,11 +18,11 @@ def query_keyword(keyword):
     try:
         with requests.Session() as session:
             _token = ''
-            print keyword
+            print(keyword)
             _query_code, _token = geetest_offline.query_keyword(session, keyword, _token)
             if _query_code:
                 for _r in _query_code:
-                    print _r[0] + ':' + _r[1]
+                    print(_r[0].decode(), ':', _r[1].decode())
         return True
     except requests.RequestException as _e:
         traceback.print_exc()
