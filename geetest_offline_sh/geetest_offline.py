@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-against geetest offline 5.9.0
-for gsxt 上海 河北
+geetest offline 5.9.0 - 6.0.0 for gsxt 上海 河北
 '''
 
 import time

@@ -90,12 +90,16 @@ pip install requests # HTTP库
 pip install PyExecJS # Python调用JavaScript, 配合node.js更佳
 pip install beautifulsoup4 # 解析HTML页面
 ```
-Run demo：  
+Demo：  
 ```
 python ./gsxt_shanghai.py
 python ./gsxt_hebei.py
 python ./gsxt_neimenggu.py
 ```
-Implementation：    
-[geetest_offline.py](/geetest_offline_sh/geetest_offline.py)  for 上海，河北。  
+Source Code    
+[gsxt_shanghai.py](/geetest_offline_sh/gsxt_shanghai.py)  MainEntry for 上海。  
+[gsxt_hebei.py](/geetest_offline_sh/gsxt_hebei.py)  MainEntry for 合并。  
+[geetest_offline.py](/geetest_offline_sh/geetest_offline.py)  Implement for 上海，河北。  
+  
+[gsxt_neimenggu.py](/geetest_offline_sh/gsxt_neimenggu.py)  MainEntry for 内蒙古。  
 [geetest_offline_nm.py](/geetest_offline_sh/geetest_offline_nm.py) for 内蒙古，HTTP Request&Response 略有不同。  

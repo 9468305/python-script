@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 '''
 国家企业信用信息公示系统(内蒙古)
-http://nm.gsxt.gov.cn/
+http://nm.gsxt.gov.cn:58888/
 '''
 import os
 import traceback
 import requests
 import geetest_offline_nm
 
-GSXT_HOST = 'http://nm.gsxt.gov.cn'
+GSXT_HOST = 'http://nm.gsxt.gov.cn:58888'
 GSXT_INDEX = GSXT_HOST + '/'
 
 def query_keyword(keyword):

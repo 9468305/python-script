@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-against geetest offline 5.9.0
-for gsxt 内蒙古
+geetest offline 5.9.0 - 6.0.0 for gsxt 内蒙古
 HTTP协议与其他站点略有不同
 '''
 
@@ -223,7 +222,7 @@ def query(query_db, save_db, queryed_db):
 
 def query_main():
     '''根据keyword查询一次'''
-    _host = 'http://nm.gsxt.gov.cn'
+    _host = 'http://nm.gsxt.gov.cn:58888'
     _index = _host + '/'
     config(_host, _index)
     try:
@@ -232,7 +231,8 @@ def query_main():
             if _code_all:
                 logging.info(len(_code_all))
                 for _r in _code_all:
-                    logging.info(_r[0] + ' : ' + _r[1])
+                    logging.info(_r[0].decode())
+                    logging.info(_r[1].decode())
     except requests.RequestException as _e:
         logging.error(_e)
 
