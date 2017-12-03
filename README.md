@@ -17,8 +17,8 @@ pip install openpyxl
 pip install -U selenium
 setup ChromeDriver
 ```
-7. [auc_pr_roc.py](/auc_pr_roc/auc_pr_roc.py) - Calculate AUC of PR or ROC curve by sklearn.  
-用于 `携程旅行网 云海竞赛平台` [携程机票航班延误预测算法大赛](https://yunhai.ctrip.com/Games/11)，竞赛算法结果验证核算。  
+7. [auc_pr_roc](/auc_pr_roc) - Calculate AUC of PR or ROC curve by sklearn.  
+用于 `携程旅行网 云海竞赛平台` [携程机票航班延误预测算法大赛](https://yunhai.ctrip.com/Games/11)，竞赛算法结果核算。  
 [Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/)  
 **Python 3.6 32bit**  
 ```
