@@ -63,8 +63,8 @@ def query(keyword):
         print(json.dumps(_content, indent=2, sort_keys=True, ensure_ascii=False))
 ```
 ### 测试运行  
-搜索关键字`腾讯科技`，得到50条数据。  
-示例：  
+搜索关键字`腾讯科技`，得到[50条数据](https://github.com/9468305/script/blob/master/gsxt_mobile/%E8%85%BE%E8%AE%AF%E7%A7%91%E6%8A%8050.txt)。  
+格式示例：  
 ```JSON
 {
 "BUSEXCEPTCOUNT": "0",
@@ -82,4 +82,5 @@ def query(keyword):
 }
 ```
   
-**实测，有时会封IP，24小时解禁，一旦封禁，爬虫和官方App一概屏蔽。威武+1。**  
+**实测，有时会封IP，24小时解禁，一旦封禁，爬虫和官方App一概屏蔽。**  
+**威武+1。**  
