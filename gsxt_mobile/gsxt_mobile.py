@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-'''通过国家企业信用信息公示系统(www.gsxt.gov.cn) Mobile App HTTP API 查询统一社会信用代码'''
+'''通过国家企业信用信息公示系统(www.gsxt.gov.cn) Mobile App HTTP API 查询企业信息'''
 
 import json
 import requests
@@ -19,7 +19,7 @@ ORIGIN = 'file://'
 CHARSET = 'application/x-www-form-urlencoded; charset=UTF-8'
 
 
-def main(keyword):
+def query(keyword):
     '''main entry'''
     _data = [('mobileAction', MOBILE_ACTION),
              ('keywords', keyword),
@@ -39,10 +39,12 @@ def main(keyword):
     print(_response.status_code)
     if _response.status_code == 200:
         _content = _response.json()
+        print(len(_content))
         print(json.dumps(_content, indent=2, sort_keys=True, ensure_ascii=False))
+        with open(keyword + str(len(_content)) + '.txt', 'w', encoding='utf-8') as _f:
+            json.dump(_content, _f, indent=2, sort_keys=True, ensure_ascii=False)
     else:
         print('request fail')
 
 if __name__ == "__main__":
-    KEY_WORD = '腾讯科技'
-    main(KEY_WORD)
+    query('腾讯科技')
