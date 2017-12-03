@@ -83,19 +83,18 @@ distance，rand0，rand1，这3个参数都是随机生成，但是如果写代�
 #### 2.6 POST http://sh.gsxt.gov.cn/notice/search/ent_info_list  
 上传session.token（步骤1获得），challenge（步骤2获得），validate（步骤5计算），keyword（查询关键字），返回HTML页面，解析DOM结构，即可获得查询结果和session.token的更新（用于下一次查询）。
 ### 3. Demo Source Code
-[GitHub](https://github.com/9468305/script/tree/master/geetest_offline_sh), Python 3.6  
+[GitHub](https://github.com/9468305/script/tree/master/geetest_offline), Python 3.6  
 Install：  
 ```
-pip install requests # HTTP库
+pip install requests # HTTP Request库
 pip install PyExecJS # Python调用JavaScript, 配合node.js更佳
 pip install beautifulsoup4 # 解析HTML页面
 ```
 Demo：  
 ```
-python ./gsxt_shanghai.py
-python ./gsxt_hebei.py
-python ./gsxt_neimenggu.py
+python ./geetest_offline.py
+python ./geetest_offline_nm.py
 ```
-Source Code  
-[geetest_offline.py](/geetest_offline_sh/geetest_offline.py) for 上海，河北。  
-[geetest_offline_nm.py](/geetest_offline_sh/geetest_offline_nm.py) for 内蒙古，HTTP Request&Response 略有不同。  
+Source Code:  
+[geetest_offline.py](/geetest_offline/geetest_offline.py) for 上海，河北。  
+[geetest_offline_nm.py](/geetest_offline/geetest_offline_nm.py) for 内蒙古，HTTP Request&Response 略有不同。  
