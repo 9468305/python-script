@@ -1,6 +1,6 @@
 ## script
-1. [geetest_offline_sh](/geetest_offline_sh) - Python破解GeeTest滑块验证码offline V5.10.10，以[国家企业信用信息公示系统（上海）](http://sh.gsxt.gov.cn)为例。  
-see [geetest_offline_sh/README.md](/geetest_offline_sh/README.md).  
+1. [geetest_offline](/geetest_offline) - Python破解GeeTest滑块验证码offline V5.10.10，以[国家企业信用信息公示系统](http://www.gsxt.gov.cn)为例。  
+详见 [geetest_offline/README.md](/geetest_offline/README.md).  
 
 2. [gitstats.py](/gitstats/gitstats.py) - git log statistics script.  
 3. [ramdisk.sh](/ramdisk/ramdisk.sh) - create RAM Disk to speed up Xcode, Android Studio Integration.  
@@ -18,8 +18,9 @@ pip install -U selenium
 setup ChromeDriver
 ```
 7. [auc_pr_roc.py](/auc_pr_roc/auc_pr_roc.py) - Calculate AUC of PR or ROC curve by sklearn.  
+用于 `携程旅行网 云海竞赛平台` [携程机票航班延误预测算法大赛](https://yunhai.ctrip.com/Games/11)，竞赛算法结果验证核算。  
 [Unofficial Windows Binaries for Python Extension Packages](http://www.lfd.uci.edu/~gohlke/pythonlibs/)  
-**For Python3.6 32bit**  
+**Python 3.6 32bit**  
 ```
 pip install http://www.lfd.uci.edu/~gohlke/pythonlibs/ru4fxw3r/numpy-1.13.1+mkl-cp36-cp36m-win32.whl
 pip install http://www.lfd.uci.edu/~gohlke/pythonlibs/ru4fxw3r/scipy-0.19.1-cp36-cp36m-win32.whl

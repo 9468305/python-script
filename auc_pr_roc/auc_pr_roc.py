@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-'''使用real.csv和result.csv表格数据，计算PR ROC曲线的AUC值'''
+'''使用real.csv和result.csv表格数据，计算PR ROC曲线的AUC值。'''
+
 import sys
 import pandas
 #from pandas import DataFrame
@@ -44,7 +45,7 @@ def check_format(real_df, result_df):
 
 
 def load_label_prob(real_csv, result_csv):
-    '''读取real.csv和result.csv表格数据的label数组和prob数组'''
+    '''读取real.csv和result.csv表格数据的label列数组和prob列数组'''
     real_df, result_df = pandas.read_csv(real_csv), pandas.read_csv(result_csv)
     check_format(real_df, result_df)
     label, prob = real_df['label'].values, result_df['prob'].values
@@ -55,7 +56,7 @@ def load_label_prob(real_csv, result_csv):
 
 
 def auc_roc(real_csv, result_csv):
-    '''使用real.csv和result.csv表格数据，计算ROC曲线的AUC值'''
+    '''使用real.csv和result.csv列数据，计算ROC曲线的AUC值'''
     label, prob = load_label_prob(real_csv, result_csv)
     area = metrics.roc_auc_score(label, prob)
     #print(area)
@@ -63,7 +64,7 @@ def auc_roc(real_csv, result_csv):
 
 
 def auc_pr(real_csv, result_csv):
-    '''使用real.csv和result.csv表格数据，计算PR曲线的AUC值'''
+    '''使用real.csv和result.csv列数据，计算PR曲线的AUC值'''
     label, prob = load_label_prob(real_csv, result_csv)
     precision, recall, _thresholds = metrics.precision_recall_curve(label, prob)
     area = metrics.auc(recall, precision)
@@ -74,6 +75,6 @@ def auc_pr(real_csv, result_csv):
 if __name__ == "__main__":
     auc_pr(sys.argv[1], sys.argv[2])
     #auc_roc(sys.argv[1], sys.argv[2])
-    #hard code parameters for test
+    #hard code for test
     #print(auc_pr('real.csv', 'result.csv'))
     #print(auc_roc('real.csv', 'result.csv'))
