@@ -4,6 +4,7 @@
 geetest offline 5.9.0 - 6.0.0 for gsxt 上海 河北
 '''
 
+import os
 import time
 import random
 import logging
@@ -27,6 +28,11 @@ CAPTCHA_JSON = []
 USERRESPONSE_JSCONTEXT = JSRUNTIME.compile(util.USERRESPONSE_JS)
 
 TIMEOUT = 10
+
+GSXT_HOST_SH = 'http://sh.gsxt.gov.cn'
+GSXT_INDEX_SH = GSXT_HOST_SH + '/notice/'
+GSXT_HOST_HE = 'http://he.gsxt.gov.cn'
+GSXT_INDEX_HE = GSXT_HOST_HE + '/notice/'
 
 def config(host, index):
     '''设置 host and index URL'''
@@ -227,7 +233,7 @@ def query_keyword(session, keyword, token):
     return post_search(session, validate, keyword, token)
 
 
-def query(query_db, save_db, queryed_db):
+def query_leveldb(query_db, save_db, queryed_db):
     '''query by leveldb'''
     try:
         with requests.Session() as session:
@@ -240,7 +246,7 @@ def query(query_db, save_db, queryed_db):
                     _query_code, _token = query_keyword(session, _subname, _token)
                     if _query_code:
                         for _r in _query_code:
-                            logging.info(_r[0] + ' : ' + _r[1])
+                            logging.info(_r[0].decode() + ' : ' + _r[1].decode())
                             save_db.Put(_r[0], _r[1], sync=True)
                     queryed_db.Put(_name, '', sync=True)
         return True
@@ -249,5 +255,47 @@ def query(query_db, save_db, queryed_db):
         return False
 
 
+def query_keyword_helper(keyword):
+    '''针对gsxt分站，根据keyword查询一次'''
+    try:
+        with requests.Session() as session:
+            _token = ''
+            logging.info(keyword)
+            _query_code, _token = query_keyword(session, keyword, _token)
+            if _query_code:
+                for _r in _query_code:
+                    logging.info(_r[0].decode() + ' : ' + _r[1].decode())
+        return True
+    except requests.RequestException as _e:
+        logging.error(_e)
+        return False
+
+
+def query_leveldb_helper():
+    '''批量查询leveldb database中所有数据'''
+    try:
+        import leveldb
+    except ImportError:
+        raise ImportError('You do not install leveldb package.')
+
+    config(GSXT_HOST_HE, GSXT_INDEX_HE)
+
+    query_db_file = os.path.join(os.getcwd(), 'data', 'shanghai.db')
+    query_db = leveldb.LevelDB(query_db_file)
+
+    save_db_file = os.path.join(os.getcwd(), 'data', 'shanghai_code.db')
+    save_db = leveldb.LevelDB(save_db_file)
+
+    queryed_db_file = os.path.join(os.getcwd(), 'data', 'shanghai_queryed.db')
+    queryed_db = leveldb.LevelDB(queryed_db_file)
+
+    _loop = True
+    while _loop:
+        _loop = not query_leveldb(query_db, save_db, queryed_db)
+
+
 if __name__ == "__main__":
-    logging.info('call query()')
+    config(GSXT_HOST_SH, GSXT_INDEX_SH)
+    query_keyword_helper('百度')
+    config(GSXT_HOST_HE, GSXT_INDEX_HE)
+    query_keyword_helper('百度')

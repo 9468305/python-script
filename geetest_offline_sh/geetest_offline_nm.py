@@ -29,6 +29,9 @@ USERRESPONSE_JSCONTEXT = JSRUNTIME.compile(util.USERRESPONSE_JS)
 
 TIMEOUT = 10
 
+GSXT_HOST_NM = 'http://nm.gsxt.gov.cn:58888'
+GSXT_INDEX_NM = GSXT_HOST_NM + '/'
+
 def config(host, index):
     '''设置 host and index URL'''
     global HOST, INDEX
@@ -199,7 +202,7 @@ def query_keyword(session, keyword):
     return _code_all
 
 
-def query(query_db, save_db, queryed_db):
+def query_leveldb(query_db, save_db, queryed_db):
     '''query by leveldb'''
     try:
         with requests.Session() as session:
@@ -220,22 +223,19 @@ def query(query_db, save_db, queryed_db):
         return False
 
 
-def query_main():
+def query_keyword_helper(keyword):
     '''根据keyword查询一次'''
-    _host = 'http://nm.gsxt.gov.cn:58888'
-    _index = _host + '/'
-    config(_host, _index)
     try:
         with requests.Session() as session:
-            _code_all = query_keyword(session, '百度')
+            _code_all = query_keyword(session, keyword)
             if _code_all:
                 logging.info(len(_code_all))
                 for _r in _code_all:
-                    logging.info(_r[0].decode())
-                    logging.info(_r[1].decode())
+                    logging.info(_r[0].decode() + ' : ' + _r[1].decode())
     except requests.RequestException as _e:
         logging.error(_e)
 
 
 if __name__ == "__main__":
-    query_main()
+    config(GSXT_HOST_NM, GSXT_INDEX_NM)
+    query_keyword_helper('百度')
