@@ -6,30 +6,18 @@ http://www.nacao.org.cn/
 全国统一社会信用代码信息校核结果公示系统
 http://125.35.63.141:8080/PublicNotificationWeb/search.do
 '''
-import os
+
 import logging
+from logging import NullHandler
 import requests
 import constants
-
-USE_LEVELDB = False
-if USE_LEVELDB:
-    import leveldb
-
-# Set default logging handler to avoid "No handler found" warnings.
-try:  # Python 2.7+
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        '''NullHandler'''
-        def emit(self, record):
-            pass
 
 logging.getLogger(__name__).addHandler(NullHandler())
 logging.basicConfig(level=logging.DEBUG)
 
 HOST = 'http://125.35.63.141:8080'
 
-# 该网站有时响应很慢，需要随时调整超时时间阈值
+# 有时响应很慢，需要随时调整超时时间阈值
 TIMEOUT = 20
 
 
@@ -94,42 +82,11 @@ def query_keyword(session, keyword):
     return _code_all
 
 
-def has_key(database, key):
-    '''安全地检查leveldb是否存在key'''
-    try:
-        database.Get(key)
-        return True
-    except KeyError:
-        return False
-
-
-def query_leveldb(query_db, save_db, queryed_db):
-    '''query by leveldb database'''
+def query():
+    '''query entry'''
     try:
         with requests.Session() as session:
-            for _name, _code in query_db.RangeIter():
-                if not has_key(save_db, _name) and not has_key(queryed_db, _name):
-                    # 模糊查询 取前6个中文字符(不精确)
-                    _subname = _name[0: 18] if len(_name) > 18 else _name
-                    logging.info(_name)
-                    logging.info(_subname)
-                    _code_all = query_keyword(session, _subname)
-                    if _code_all:
-                        for _c in _code_all:
-                            logging.info(_c[0] + ' : ' + _c[1])
-                            save_db.Put(_c[0], _c[1], sync=True)
-                    queryed_db.Put(_name, '', sync=True)
-        return True
-    except requests.RequestException as _e:
-        logging.error(_e)
-        return False
-
-
-def query_once():
-    '''query once'''
-    try:
-        with requests.Session() as session:
-            # * 就是通配符, 可替换成任意公司名称, 该接口可能存在SQL注入漏洞, 未深入验证.
+            # * 就是通配符, 可替换成任意公司名称, 该接口可能存在SQL注入漏洞, 未深入验证。
             _code_all = query_keyword(session, '*')
             if _code_all:
                 logging.info(len(_code_all))
@@ -139,26 +96,5 @@ def query_once():
         logging.error(_e)
 
 
-def query_batch():
-    '''query batch by leveldb'''
-    if not USE_LEVELDB:
-        logging.error('leveldb disabled')
-        return
-
-    query_db_file = os.path.join(os.getcwd(), 'data', 'query.db')
-    query_db = leveldb.LevelDB(query_db_file)
-
-    save_db_file = os.path.join(os.getcwd(), 'data', 'save.db')
-    save_db = leveldb.LevelDB(save_db_file)
-
-    queryed_db_file = os.path.join(os.getcwd(), 'data', 'queryed.db')
-    queryed_db = leveldb.LevelDB(queryed_db_file)
-
-    _loop = True
-    while _loop:
-        _loop = not query_leveldb(query_db, save_db, queryed_db)
-
-
 if __name__ == "__main__":
-    #query_batch()
-    query_once()
+    query()

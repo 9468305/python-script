@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''
-HTTP Request 常量
+HTTP Request 常用常量
 '''
 
 ACCEPT_ANY = '*/*'
