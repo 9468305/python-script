@@ -30,4 +30,3 @@ pip install -U selenium
 setup ChromeDriver
 ```
 8. [gitstats.py](/gitstats/gitstats.py) - git log statistics script.  
-9. [ramdisk.sh](/ramdisk/ramdisk.sh) - create RAM Disk to speed up Xcode, Android Studio Integration.  
