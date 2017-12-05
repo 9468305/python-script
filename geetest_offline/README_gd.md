@@ -2,8 +2,8 @@
 目标网站设定为 http://gd.gsxt.org.cn 国家企业信用信息公示系统（广东）。  
 
 首页依然是采用GeeTest滑块验证码Offline模式验证，应对方案详见[《Python破解GeeTest滑块验证码offline V5.10.10》](http://www.jianshu.com/p/7623ff64ee54)。  
-过程略，以搜索关键字“腾讯科技”为例，第一步获得如下数据。  
-```JSON
+校验过程省略，以搜索关键字“腾讯科技”为例，第一步获得如下数据。  
+```
 [
   ('广州腾讯科技有限公司',
    'http://gsxt.gzaic.gov.cn/aiccips/GSpublicity/GSpublicityList.html?service=entInfo_nPNw57QPCnL961TNeXO4Gqc/FgBy7ESTwWPrP4zJe5g=-FBrJ/suNwXMupXtmIUvNKg=='),
@@ -40,7 +40,7 @@ if _url.startswith('../'):
     _url = INDEX + '/aiccips/CheckEntContext/' + _url
 ```
 最终整理得到数据：  
-```JSON
+```
 {
   '注册号/统一社会信用代码': '91440101327598294H',
   '注册资本': '0',
@@ -78,3 +78,4 @@ https://www.szcredit.org.cn/GJQYCredit/GSZJGSPTS/QYGS.aspx?rid=6B553DC2860F51DD8
 https://www.szcredit.org.cn/web/gspt/newGSPTDetail3.aspx?ID=2e82a6a7aaec419884738d2421e7a838  
 
 **吐槽+3：这都什么鬼？**  
+最后，[源码见GitHub](https://github.com/9468305/script/blob/master/geetest_offline/geetest_offline_gd.py)。  
