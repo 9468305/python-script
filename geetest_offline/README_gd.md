@@ -1,5 +1,5 @@
 这次的爬虫换个目标，不仅仅抓取统一社会信用代码（税号），还要抓取企业基础信息。  
-目标网站设定为 http://gd.gsxt.org.cn 国家企业信用信息公示系统（广东）。  
+目标网站设定为 http://gd.gsxt.gov.cn 国家企业信用信息公示系统（广东）。  
 
 首页依然是采用GeeTest滑块验证码Offline模式验证，应对方案详见[《Python破解GeeTest滑块验证码offline V5.10.10》](http://www.jianshu.com/p/7623ff64ee54)。  
 校验过程省略，以搜索关键字“腾讯科技”为例，第一步获得如下数据。  
@@ -77,5 +77,5 @@ https://www.szcredit.org.cn/GJQYCredit/GSZJGSPTS/QYGS.aspx?rid=6B553DC2860F51DD8
 从 https://www.szcredit.org.cn ，查询和跳转正常。  
 https://www.szcredit.org.cn/web/gspt/newGSPTDetail3.aspx?ID=2e82a6a7aaec419884738d2421e7a838  
 
-**吐槽+3：这都什么鬼？**  
+**吐槽+3：这都是什么运维水平？**  
 最后，[源码见GitHub](https://github.com/9468305/script/blob/master/geetest_offline/geetest_offline_gd.py)。  
