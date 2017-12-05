@@ -199,8 +199,8 @@ def get_validate(session, keyword):
     return None
 
 
-def parse_detail(html_doc):
-    '''parse company detail'''
+def parse_detail_sz(html_doc):
+    '''parse company detail for shenzhen'''
     _soup = BeautifulSoup(html_doc, 'html.parser')
     _yyzz = _soup.find('div', class_='item_box', id='yyzz')
     if not _yyzz:
@@ -223,8 +223,8 @@ def parse_detail(html_doc):
     return _info
 
 
-def parse_detail_2(html_doc):
-    '''parse company detail 2'''
+def parse_detail(html_doc):
+    '''parse company detail for guangzhou and other'''
     _soup = BeautifulSoup(html_doc, 'html.parser')
     _table = _soup.find('table', cellspacing='6')
     if not _table:
@@ -309,16 +309,16 @@ def query_detail(session, url):
     logging.debug('response code:' + str(_response.status_code))
     if _response.status_code == 200:
         if url.find('www.szcredit.org.cn') is not -1:
-            return parse_detail(_response.text)
+            return parse_detail_sz(_response.text)
         elif url.find('GSpublicityList.html') is not -1:
-            return parse_detail_2(_response.text)
+            return parse_detail(_response.text)
         else:
             logging.error('URL Type Not Support')
     return None
 
 
 def safe_query_detail(url):
-    '''Safe query url, handle network timeout and retry'''
+    '''Safe query url, handle network timeout and retry multi times.'''
     for _ in range(5):
         try:
             with requests.Session() as session:
