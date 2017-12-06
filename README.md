@@ -12,7 +12,7 @@ Python爬虫 - http://gd.gsxt.gov.cn 企业详细信息。
 Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V1.0。  
 6. [nacao_v2](/nacao_v2)  
 Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V2.0。  
-7. [excel_combine.py](/excel_combine)  
+7. [excel_combine](/excel_combine)  
 Python实现 - Excel多文件一键自动合并。  
 8. [lagou.py](/lagou/lagou.py) - spider for [www.lagou.com](https://www.lagou.com).  
 ```

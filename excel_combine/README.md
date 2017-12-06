@@ -28,6 +28,7 @@ _results = []
 ```
 
 ### 注意：删除合并汇总文件，即combine.xlsx。
+合并之前，删除结果文件，以防数据错误。  
 ```Python
 _result = search_file(from_dir)
 try:
