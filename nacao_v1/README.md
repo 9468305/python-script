@@ -28,7 +28,7 @@ IP被封怎么办？
 1. 关键字查询  
 GET http://125.35.63.141:8080/PublicNotificationWeb/search.do  
 参数：searchText = 关键字，searchType = 3。  
-响应：返回一个字符串Referer。  
+响应：返回一个字符串Referer。用于query.do的HTTP header参数。  
 2. 分页获取数据  
 POST http://125.35.63.141:8080/PublicNotificationWeb/query.do  
 参数：  
