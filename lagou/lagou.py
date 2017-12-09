@@ -25,7 +25,7 @@ COMPANY = {
 SLEEPTIME = 3 #seconds
 
 class JobInfo(object):
-    '''Job Object'''
+    '''Job Info Object'''
     def __init__(self, company, job_filter, title, salary_min, salary_max, exp, edu):
         self.company = company
         self.filter = job_filter
@@ -38,7 +38,7 @@ class JobInfo(object):
     @staticmethod
     def header():
         '''csv file header'''
-        return ["公司", "类别", "职位", "薪酬区间低", "薪酬区间高", "经验要求", "学历要求"]
+        return ['公司', '类别', '职位', '薪酬区间低', '薪酬区间高', '经验要求', '学历要求']
 
     def array(self):
         '''object to array'''
@@ -54,7 +54,7 @@ class JobInfo(object):
 def lagou_page(browser, job_list, company_name, job_filter):
     '''filter for every page'''
     con_list_item = WebDriverWait(browser, SLEEPTIME)\
-        .until(lambda x: x.find_elements_by_class_name("con_list_item"))
+        .until(lambda x: x.find_elements_by_class_name('con_list_item'))
     for item in con_list_item:
         job = item.text.split('\n')
         job_title = job[0]
@@ -83,21 +83,22 @@ def lagou_page(browser, job_list, company_name, job_filter):
                       job_exp,
                       job_edu)
         job_list.append(job)
-        print job_title
-        print job_salary_min
-        print job_salary_max
-        print job_exp
-        print job_edu
+        print(job_title)
+        print(job_salary_min)
+        print(job_salary_max)
+        print(job_exp)
+        print(job_edu)
 
 
 def get_next_span(spans):
     '''find next page button'''
     for span in spans:
-        print span.text
+        print(span.text)
         if span.text == '下一页':
             if span.get_attribute('class') == 'next':
                 return span
     return None
+
 
 def lagou_filter(browser, job_list, company_name, job_filter):
     '''filter by job types'''
@@ -108,13 +109,13 @@ def lagou_filter(browser, job_list, company_name, job_filter):
             pages = browser.find_element_by_class_name('pages')
             spans = pages.find_elements_by_tag_name('span')
             span = get_next_span(spans)
-            if span is not None:
+            if span:
                 span.click()
                 time.sleep(SLEEPTIME)
             else:
                 return
-        except NoSuchElementException as no_such_element_exp:
-            print no_such_element_exp
+        except NoSuchElementException as _e:
+            print(_e)
             return
 
 
@@ -126,19 +127,19 @@ def lagou_company(browser, company_name, company_number):
     time.sleep(SLEEPTIME*3)
     while True:
         try:
-            print browser.title
+            print(browser.title)
             con_filter_li = WebDriverWait(browser, SLEEPTIME)\
-                .until(lambda x: x.find_elements_by_class_name("con_filter_li"))
+                .until(lambda x: x.find_elements_by_class_name('con_filter_li'))
             for line in con_filter_li:
-                print line.text
+                print(line.text)
                 if line.text == '全部':
-                    print "skip"
+                    print('skip')
                     continue
                 line.click()
                 time.sleep(SLEEPTIME)
                 lagou_filter(browser, company_job_list, company_name, line.text)
-        except NoSuchElementException as no_such_element_exp:
-            print no_such_element_exp
+        except NoSuchElementException as _e:
+            print(_e)
             del company_job_list[:]
             # company_job_list.clear() only work for python3
             browser.refresh()
@@ -156,7 +157,7 @@ def lagou_company(browser, company_name, company_number):
 
 def lagou(browser, company_number):
     '''lagou entity: target one company or all.'''
-    print "lagou start"
+    print('lagou start')
     for name, code in COMPANY.items():
         if company_number is not None:
             if int(code) == int(company_number):
@@ -164,10 +165,10 @@ def lagou(browser, company_number):
                 break
         else:
             lagou_company(browser, name, code)
-    print "lagou end"
+    print('lagou end')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     BROWSER = webdriver.Chrome()
     #implicitly_wait seems can not waiting for Ajax loading complete
     #_browser.implicitly_wait(TIMEOUT)
