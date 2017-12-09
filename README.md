@@ -14,6 +14,6 @@ Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V1
 Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V2.0。  
 7. [excel_combine](/excel_combine)  
 Python实现 - Excel多文件一键自动合并。  
-8. [lagou.py](/lagou)  
+8. [lagou](/lagou)  
 Python爬虫 - Selenium [拉勾网](https://www.lagou.com) 数据采集。  
-9. [gitstats.py](/gitstats/gitstats.py) - git log statistics script.  
+9. [gitstats](/gitstats) - git log statistics script.  
