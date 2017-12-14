@@ -19,4 +19,4 @@ Python爬虫 - Selenium [拉勾网](https://www.lagou.com) 数据采集。
 9. [level](/level)  
 Python leveldb Utils 常用方法封装。  
 10. [gitstats](/gitstats)  
-Git log statistics.  
+Python实现 - Git commit log统计分析。  
