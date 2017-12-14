@@ -1,30 +1,42 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''Analyse git branch commit log, for every version, every person.'''
 import os
+import sys
 import re
 import csv
 
 GIT_LOG = r'git -C {} log --since={} --until={} --pretty=tformat:%ae --shortstat --no-merges -- {} > {}'
 
-GIT_LOG_TXT = 'gitstats.txt'
-
 REPATTERN_FULL = r"\s(\d+)\D+(\d+)\D+(\d+)\D+\n"
 REPATTERN_INSERT_ONLY = r"\s(\d+)\D+(\d+)\sinsertion\D+\n"
 REPATTERN_DELETE_ONLY = r"\s(\d+)\D+(\d+)\sdeletion\D+\n"
+
 CSV_FILE_HEADER = ["Author", "Commit", "Insert", "Delete", "Loc"]
 
 
-def gitstats(repo, since, until, subdir, csvfile):
-    '''Analyse git log and sort to csv file.'''
-    logfile = os.path.join(os.getcwd(), GIT_LOG_TXT)
+def exec_git(repo, since, until, subdir):
+    '''Execute git log commant, return string array.'''
+    logfile = os.path.join(os.getcwd(), 'gitstats.txt')
     git_log_command = GIT_LOG.format(repo, since, until, subdir, logfile)
     os.system(git_log_command)
     lines = None
-    with open(logfile, 'r') as logfilehandler:
+    with open(logfile, 'r', encoding='utf-8') as logfilehandler:
         lines = logfilehandler.readlines()
-    assert lines is not None
+    return lines
 
+
+def save_csv(stats, csvfile):
+    '''save stats data to csv file.'''
+    with open(csvfile, 'w', encoding='utf-8') as csvfilehandler:
+        writer = csv.writer(csvfilehandler)
+        writer.writerow(CSV_FILE_HEADER)
+        for author, stat in stats.items():
+            writer.writerow([author, stat[0], stat[1], stat[2], stat[3]])
+
+
+def parse(lines):
+    '''Analyse git log and sort to csv file.'''
     prog_full = re.compile(REPATTERN_FULL)
     prog_insert_only = re.compile(REPATTERN_INSERT_ONLY)
     prog_delete_only = re.compile(REPATTERN_DELETE_ONLY)
@@ -34,10 +46,8 @@ def gitstats(repo, since, until, subdir, csvfile):
         author = lines[i]
         #empty = lines[i+1]
         info = lines[i+2]
-
         #change = 0
-        insert = int(0)
-        delete = int(0)
+        insert, delete = int(0), int(0)
         result = prog_full.search(info)
         if result:
             #change = result[0]
@@ -56,7 +66,7 @@ def gitstats(repo, since, until, subdir, csvfile):
                     insert = int(0)
                     delete = int(result.group(2))
                 else:
-                    print 'Regular expression failed!'
+                    print('Regular expression fail!')
                     return
 
         loc = insert - delete
@@ -69,24 +79,22 @@ def gitstats(repo, since, until, subdir, csvfile):
             stat[2] += delete
             stat[3] += loc
 
-        with open(csvfile, 'w') as csvfilehandler:
-            writer = csv.writer(csvfilehandler)
-            writer.writerow(CSV_FILE_HEADER)
-            for author, stat in stats.items():
-                writer.writerow([author, stat[0], stat[1], stat[2], stat[3]])
+    return stats
 
 
 if __name__ == "__main__":
-    REPO = '../ctrip/IOS_2/'
-    SINCE = '2017-04-01'
-    UNTIL = '2017-05-01'
-    SUB_DIR = 'CTFlight'
-    CSV_FILE = os.path.join(os.getcwd(), 'gitstats_iOS_v7_4.csv')
-    gitstats(REPO, SINCE, UNTIL, SUB_DIR, CSV_FILE)
+    print('gitstats begin')
+    if len(sys.argv) != 6:
+        print('Invalid argv parameters.')
+        exit(0)
 
-    REPO = '../ctrip/android_2/'
-    SINCE = '2017-04-01'
-    UNTIL = '2017-05-01'
-    SUB_DIR = 'CTFlight'
-    CSV_FILE = os.path.join(os.getcwd(), 'gitstats_Android_v7_4.csv')
-    gitstats(REPO, SINCE, UNTIL, SUB_DIR, CSV_FILE)
+    REPO = os.path.join(os.getcwd(), sys.argv[1])
+    SINCE = sys.argv[2]
+    UNTIL = sys.argv[3]
+    SUB_DIR = sys.argv[4]
+    CSV_FILE = os.path.join(os.getcwd(), sys.argv[5])
+    LINES = exec_git(REPO, SINCE, UNTIL, SUB_DIR)
+    assert LINES is not None
+    STATS = parse(LINES)
+    save_csv(STATS, CSV_FILE)
+    print('gitstats done')
