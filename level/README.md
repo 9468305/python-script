@@ -178,6 +178,6 @@ def excel_to_db(from_excel, to_db):
 ### 源码见GitHub
 https://github.com/9468305/script/tree/master/level  
 
-### 后记
+### 后记
 这篇文档整理完成时，leveldb官网已经推出官方Python版本。  
 详见 https://plyvel.readthedocs.io/en/latest/  
