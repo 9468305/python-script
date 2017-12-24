@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''
-geetest offline 5.9.0 - 6.0.0 for gsxt 上海 河北
+geetest offline 5.9.0 - 6.0.0 for sh.gsxt.gov.cn, he.gsxt.gov.cn
 '''
 
 import os
