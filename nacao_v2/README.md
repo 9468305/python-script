@@ -3,7 +3,7 @@
 V1.0方案见 https://github.com/9468305/script/tree/master/nacao_v1 。
 ### IP变域名
 125.35.63.141:8080 变成 dmedu.org.cn 。（该域名解析IP仍是 125.35.63.141 ）因此2个API接口改变。  
-旧：
+旧：  
 http://125.35.63.141:8080/PublicNotificationWeb/search.do  
 http://125.35.63.141:8080/PublicNotificationWeb/query.do  
 新：  
