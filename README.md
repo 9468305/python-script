@@ -20,3 +20,5 @@ Python爬虫 - Selenium [拉勾网](https://www.lagou.com) 数据采集。
 Python leveldb Utils 常用方法封装。  
 10. [gitstats](/gitstats)  
 Python实现 - Git commit log统计分析。  
+11. [geetest_online](/geetest_online)  
+Python破解GeeTest滑块验证码online，以[国家企业信用信息公示系统](http://www.gsxt.gov.cn)网站为例。  
