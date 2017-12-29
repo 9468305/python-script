@@ -18,8 +18,8 @@ from bs4 import BeautifulSoup
 import constants
 import util
 
-GSXT_HOST = ''
-GSXT_INDEX = ''
+GSXT_HOST = 'http://www.gsxt.gov.cn'
+GSXT_INDEX = GSXT_HOST + '/index.html'
 GEETEST_API_HOST = 'http://api.geetest.com'
 GEETEST_STATIC_HOST = 'http://static.geetest.com'
 
@@ -37,18 +37,13 @@ GETTYPE_JSON = None
 
 CONFIG_JSON = None
 
-JSRUNTIME = execjs.get(execjs.runtime_names.Node)
+JSRUNTIME = execjs.get()
 
 SPLIT_ARRAY_JSCONTEXT = JSRUNTIME.compile(util.SPLIT_ARRAY_JS)
 
 USERRESPONSE_JSCONTEXT = JSRUNTIME.compile(util.USERRESPONSE_JS)
 
 TRACE_JS_CONTEXT = JSRUNTIME.compile(util.TRACE_JS)
-
-def set_host(host, index):
-    '''setup host and index URL'''
-    global GSXT_HOST, GSXT_INDEX
-    GSXT_HOST, GSXT_INDEX = host, index
 
 
 def get_image(image_name):
@@ -247,6 +242,7 @@ def get_main(session):
 
     response = session.get(_url, headers=_headers)
     print('response code:' + str(response.status_code))
+    print(response.cookies)
     if response.status_code != 200:
         return False
     return True
@@ -580,7 +576,7 @@ def get_validate(session, search_name):
                 return _ajax_json
             else:
                 # 验证码失败 forbidden 时，等待3秒刷新
-                # TODO: 验证码失败 fail 时，暂不特殊处理，直接刷新。（因为我的滑块位置算法非常精确）
+                # 验证码失败 fail 时，暂不处理，直接刷新。（因为我的滑块位置算法非常精确）
                 time.sleep(3)
                 if not get_refresh(session):
                     return None
