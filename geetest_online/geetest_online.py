@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 '''
 geetest online 5.10.10 spider for www.gsxt.gov.cn
-for gsxt 主站
 '''
 
 import time
