@@ -22,3 +22,11 @@
 
 #### 源码见GitHub
 https://github.com/9468305/script/tree/master/geetest_online  
+
+#### Dependence
+```
+pip install requests
+pip install Pillow
+pip install PyExecJS
+pip install beautifulsoup4
+```
