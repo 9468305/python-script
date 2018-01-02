@@ -19,7 +19,8 @@ pageSize 20扩大至100 继续可用
 searchText使用*通配符，继续可用  
 
 ### 实现
-因此V2.0的代码更简单，[源码见GitHub](https://github.com/9468305/script/tree/master/nacao_v2)。  
+因此V2.0的代码更简单，源码见GitHub  
+https://github.com/9468305/script/tree/master/nacao_v2  
 
 ### 后记
-目前官网已经针对该接口增加了图片字符验证码，因此该方案失效。关于如何识别图片字符验证码，可以Google“远程打码”。  
+目前官网已经针对该接口增加了图片字符验证码，因此该方案已失效。关于如何识别图片字符验证码，可以Google“远程打码”。  

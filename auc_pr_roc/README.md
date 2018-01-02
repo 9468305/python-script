@@ -15,7 +15,6 @@ HU7377	URC	CKG	1496273700	1496287500	0.106757728
 评估指标参考文献：http://mark.goadrich.com/articles/davisgoadrichcamera2.pdf  
   
 ### 实现
-[源码见GitHub](https://github.com/9468305/script/blob/master/auc_pr_roc/)  
 csv文件读取使用pandas库。  
 ```Python
 def load_label_prob(real_csv, result_csv):
@@ -53,3 +52,6 @@ pip install http://www.lfd.uci.edu/~gohlke/pythonlibs/ru4fxw3r/scipy-0.19.1-cp36
 pip install pandas
 pip install scikit-learn
 ```
+
+### 源码见GitHub
+https://github.com/9468305/script/blob/master/auc_pr_roc/

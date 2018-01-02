@@ -24,7 +24,7 @@ dex很小，assets文件很多。
 使用Fiddler抓包，仅有一条简单的HTTP Request & Response。  
 Response是标准JSON文本。  
   
-随手写个实现，[源码见GitHub](https://github.com/9468305/script/tree/master/gsxt_mobile)：
+随手写个实现  
 ### 填写Android Mobile HTTP Header参数。  
 ```Python
 URL = 'http://yd.gsxt.gov.cn/QuerySummary'
@@ -84,3 +84,6 @@ def query(keyword):
   
 **实测，有时会封IP，24小时解禁，一旦封禁，爬虫和官方App一概屏蔽。**  
 **威武+1。**  
+
+### 源码见GitHub
+https://github.com/9468305/script/tree/master/gsxt_mobile

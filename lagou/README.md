@@ -95,4 +95,5 @@ browser.quit()
 browser.implicitly_wait(TIMEOUT)
 ```
 
-### [源码见GitHub](https://github.com/9468305/script/tree/master/lagou)
+### 源码见GitHub
+https://github.com/9468305/script/tree/master/lagou
