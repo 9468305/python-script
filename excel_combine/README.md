@@ -89,4 +89,4 @@ _wb.save(excel_file)
 + 没有处理Excel公式计算。
 
 ### 源码见GitHub
-https://github.com/9468305/script/tree/master/excel_combine  
+https://github.com/9468305/python-script/tree/master/excel_combine  

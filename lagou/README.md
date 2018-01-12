@@ -96,4 +96,4 @@ browser.implicitly_wait(TIMEOUT)
 ```
 
 ### 源码见GitHub
-https://github.com/9468305/script/tree/master/lagou
+https://github.com/9468305/python-script/tree/master/lagou

@@ -54,4 +54,4 @@ pip install scikit-learn
 ```
 
 ### 源码见GitHub
-https://github.com/9468305/script/blob/master/auc_pr_roc/
+https://github.com/9468305/python-script/blob/master/auc_pr_roc/

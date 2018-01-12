@@ -176,7 +176,7 @@ def excel_to_db(from_excel, to_db):
     return total
 ```
 ### 源码见GitHub
-https://github.com/9468305/script/tree/master/level  
+https://github.com/9468305/python-script/tree/master/level  
 
 ### 后记
 这篇文档整理完成时，leveldb官网已经推出官方Python版本。  

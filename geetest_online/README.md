@@ -20,7 +20,7 @@
 + 补全官网针对爬虫返回HTTP 521的处理，补全Cookie校验逻辑。
 
 #### 源码见GitHub
-https://github.com/9468305/script/tree/master/geetest_online  
+https://github.com/9468305/python-script/tree/master/geetest_online  
 
 #### Dependence
 ```

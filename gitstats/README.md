@@ -33,4 +33,4 @@ REPATTERN_DELETE_ONLY = r"\s(\d+)\D+(\d+)\sdeletion\D+\n"
 简单省略。
 
 ### 源码见GitHub
-https://github.com/9468305/script/tree/master/gitstats  
+https://github.com/9468305/python-script/tree/master/gitstats  

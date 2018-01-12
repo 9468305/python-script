@@ -63,7 +63,7 @@ def query(keyword):
         print(json.dumps(_content, indent=2, sort_keys=True, ensure_ascii=False))
 ```
 ### 测试运行  
-搜索关键字`腾讯科技`，得到[50条数据](https://github.com/9468305/script/blob/master/gsxt_mobile/%E8%85%BE%E8%AE%AF%E7%A7%91%E6%8A%8050.txt)。  
+搜索关键字`腾讯科技`，得到[50条数据](https://github.com/9468305/python-script/blob/master/gsxt_mobile/%E8%85%BE%E8%AE%AF%E7%A7%91%E6%8A%8050.txt)。  
 格式示例：  
 ```JSON
 {
@@ -86,4 +86,4 @@ def query(keyword):
 **威武+1。**  
 
 ### 源码见GitHub
-https://github.com/9468305/script/tree/master/gsxt_mobile
+https://github.com/9468305/python-script/tree/master/gsxt_mobile

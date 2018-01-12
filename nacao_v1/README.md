@@ -59,13 +59,13 @@ _params = [ ('pageSize', 20),
 + pageSize 从20改成100，最多可一次获得500条数据。
 + searchText 搜索关键字改成*，可获得服务器数据库默认排序数据。此时foundCount等于官网数据库数据总量。
   
-实测数据日志见[sql_injection.txt](https://github.com/9468305/script/tree/master/nacao_v1/sql_injection.txt)。  
+实测数据日志见[sql_injection.txt](https://github.com/9468305/python-script/tree/master/nacao_v1/sql_injection.txt)。  
 所以这里能否使用SQLInjection，获得数据库访问权限，直接拖库呢？  
 留待有心人探索。  
 
 ### V1.0源码见GitHub
-https://github.com/9468305/script/tree/master/nacao_v1  
+https://github.com/9468305/python-script/tree/master/nacao_v1  
 
 ### 后记
 官网进行了改版，原方案接口失效。新方案V2.0:  
-https://github.com/9468305/script/tree/master/nacao_v2  
+https://github.com/9468305/python-script/tree/master/nacao_v2  
