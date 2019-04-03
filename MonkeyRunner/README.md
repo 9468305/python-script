@@ -79,3 +79,88 @@ dump: creates an XML dump of current UI hierarchy
 
 events: prints out accessibility events until terminated
 ```
+
+### Bug
+[DumpCommand.java](https://android.googlesource.com/platform/frameworks/testing/+/master/uiautomator/cmds/uiautomator/src/com/android/commands/uiautomator/DumpCommand.java)  
+
+`uiAutomation.waitForIdle(1000, 1000 * 10);`  
+
+```Java
+// It appears that the bridge needs time to be ready. Making calls to the
+// bridge immediately after connecting seems to cause exceptions. So let's also
+// do a wait for idle in case the app is busy.
+try {
+    UiAutomation uiAutomation = automationWrapper.getUiAutomation();
+    uiAutomation.waitForIdle(1000, 1000 * 10);
+    AccessibilityNodeInfo info = uiAutomation.getRootInActiveWindow();
+    if (info == null) {
+        System.err.println("ERROR: null root node returned by UiTestAutomationBridge.");
+        return;
+    }
+    Display display =
+            DisplayManagerGlobal.getInstance().getRealDisplay(Display.DEFAULT_DISPLAY);
+    int rotation = display.getRotation();
+    Point size = new Point();
+    display.getSize(size);
+    AccessibilityNodeInfoDumper.dumpWindowToFile(info, dumpFile, rotation, size.x, size.y);
+} catch (TimeoutException re) {
+    System.err.println("ERROR: could not get idle state.");
+    return;
+} finally {
+    automationWrapper.disconnect();
+}
+System.out.println(
+        String.format("UI hierchary dumped to: %s", dumpFile.getAbsolutePath()));
+```
+
+[UiAutomation.java](https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/UiAutomation.java)  
+
+```Java
+/**
+  * Waits for the accessibility event stream to become idle, which is not to
+  * have received an accessibility event within <code>idleTimeoutMillis</code>.
+  * The total time spent to wait for an idle accessibility event stream is bounded
+  * by the <code>globalTimeoutMillis</code>.
+  *
+  * @param idleTimeoutMillis The timeout in milliseconds between two events
+  *            to consider the device idle.
+  * @param globalTimeoutMillis The maximal global timeout in milliseconds in
+  *            which to wait for an idle state.
+  *
+  * @throws TimeoutException If no idle state was detected within
+  *            <code>globalTimeoutMillis.</code>
+  */
+public void waitForIdle(long idleTimeoutMillis, long globalTimeoutMillis)
+        throws TimeoutException {
+    synchronized (mLock) {
+        throwIfNotConnectedLocked();
+        final long startTimeMillis = SystemClock.uptimeMillis();
+        if (mLastEventTimeMillis <= 0) {
+            mLastEventTimeMillis = startTimeMillis;
+        }
+        while (true) {
+            final long currentTimeMillis = SystemClock.uptimeMillis();
+            // Did we get idle state within the global timeout?
+            final long elapsedGlobalTimeMillis = currentTimeMillis - startTimeMillis;
+            final long remainingGlobalTimeMillis =
+                    globalTimeoutMillis - elapsedGlobalTimeMillis;
+            if (remainingGlobalTimeMillis <= 0) {
+                throw new TimeoutException("No idle state with idle timeout: "
+                        + idleTimeoutMillis + " within global timeout: "
+                        + globalTimeoutMillis);
+            }
+            // Did we get an idle state within the idle timeout?
+            final long elapsedIdleTimeMillis = currentTimeMillis - mLastEventTimeMillis;
+            final long remainingIdleTimeMillis = idleTimeoutMillis - elapsedIdleTimeMillis;
+            if (remainingIdleTimeMillis <= 0) {
+                return;
+            }
+            try {
+                  mLock.wait(remainingIdleTimeMillis);
+            } catch (InterruptedException ie) {
+                  /* ignore */
+            }
+        }
+    }
+}
+```
