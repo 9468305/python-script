@@ -1,5 +1,5 @@
-# My Python Script
-
+My Python Script
+--------
 1. [auc_pr_roc](/auc_pr_roc)  
 Python scikit-learn计算PR ROC曲线AUC值。  
 用于 `携程旅行网 云海竞赛平台` [携程机票航班延误预测算法大赛](https://yunhai.ctrip.com/Games/11)，竞赛算法结果核算。  
@@ -25,3 +25,21 @@ Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V1
 Python爬虫 - [全国组织结构代码管理中心](http://www.nacao.org.cn)V2.0。  
 12. [MonkeyRunner](/MonkeyRunner)  
 MonkeyRunner is STUPID!  
+
+License
+--------
+```
+   Copyright 2019 ChenQi
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
