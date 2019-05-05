@@ -1,11 +1,11 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 '''PageSpeed Insights + Google Cloud Functions'''
-
+import os
 from googleapiclient.discovery import build
 
 # Access Token, generated from GCP Console Credentials page.
-API_KEY = ''
+API_KEY = os.getenv('GCP_API_KEY')
 
 # For local development, setup http proxy as needed.
 HTTP = None
@@ -40,8 +40,5 @@ if __name__ == "__main__":
     HTTP = httplib2.Http(
         proxy_info = httplib2.ProxyInfo(httplib2.socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 1086)
     )
-
-    import os
-    API_KEY = os.getenv('GCP_API_KEY')
 
     run(_request)
