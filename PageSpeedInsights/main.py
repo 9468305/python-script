@@ -1,36 +1,47 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-'''
-PageSpeed Insights + Google Cloud Functions
-'''
+'''PageSpeed Insights + Google Cloud Functions'''
 
 from googleapiclient.discovery import build
-import setting
 
-def hello_world(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-    """
-    request_json = request.get_json()
-    if request.args and 'message' in request.args:
-        return request.args.get('message')
-    elif request_json and 'message' in request_json:
-        return request_json['message']
-    else:
-        return f'Hello World!'
+# Access Token, generated from GCP Console Credentials page.
+API_KEY = ''
+
+# For local development, setup http proxy as needed.
+HTTP = None
 
 def run(request):
-    '''
-    Call PageSpeedInsights API
-    '''
-    service = build(serviceName='pagespeedonline', version='v5', developerKey=setting.API_KEY)
-    print('\n'.join(['%s:%s' % item for item in service.__dict__.items()]))
+    '''Run PageSpeedInsights API'''
+    request_json = request.get_json()
+    try:
+        url = request_json['url']
+    except KeyError:
+        return ('', 400)
 
+    pagespeedonline = build(
+        serviceName = 'pagespeedonline',
+        version = 'v5',
+        http = HTTP,
+        developerKey = API_KEY
+    )
+    response = pagespeedonline.pagespeedapi().runpagespeed(
+        url = url
+    ).execute()
+    print(response)
+    return ('OK', 200)
 
 if __name__ == "__main__":
-    run("")
+    from flask import Request
+    _request = Request.from_values(
+        json = { "url": "https://m.ctrip.com" }
+    )
+
+    import httplib2
+    HTTP = httplib2.Http(
+        proxy_info = httplib2.ProxyInfo(httplib2.socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 1086)
+    )
+
+    import os
+    API_KEY = os.getenv('GCP_API_KEY')
+
+    run(_request)
