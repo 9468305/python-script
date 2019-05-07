@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-'''PageSpeed Insights + Google Cloud Functions'''
+'''PageSpeed Insights Single + Google Cloud Functions'''
 import os
 from googleapiclient.discovery import build
 
