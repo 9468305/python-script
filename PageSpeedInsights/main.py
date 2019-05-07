@@ -10,6 +10,8 @@ API_KEY = os.getenv('GCP_API_KEY')
 # For local development, setup http proxy as needed.
 HTTP = None
 
+URL = "https://m.ctrip.com/webapp/flight/schedule/detail.html"
+
 def run(url):
     pagespeedonline = build(
         serviceName = 'pagespeedonline',
@@ -35,16 +37,20 @@ def run_pubsub(event, context):
     run(pubsub_message)
     return 'OK'
 
+def test_run_http():
+    from flask import Request
+    _request = Request.from_values(json = { "url": URL })
+    run_http(_request)
+
+def test_run_pubsub():
+    import base64
+    event = { "data": base64.urlsafe_b64encode(URL.encode('utf-8'))}
+    context = None
+    run_pubsub(event, context)
 
 if __name__ == "__main__":
     import httplib2
     HTTP = httplib2.Http(proxy_info = httplib2.ProxyInfo(httplib2.socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 1086))
 
-    from flask import Request
-    _request = Request.from_values(json = { "url": "https://m.ctrip.com" })
-    run_http(_request)
-
-    import base64
-    event = { "data": base64.urlsafe_b64encode("https://m.ctrip.com".encode('utf-8'))}
-    context = None
-    run_pubsub(event, context)
+    test_run_http()
+    test_run_pubsub()
