@@ -5,19 +5,17 @@ import os
 from google.cloud import pubsub_v1
 
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
-TOPIC_NAME = os.getenv("GCP_TOPIC_NAME")
+TOPIC_NAME = "psi-single"
 
 def run(event, context):
     publisher = pubsub_v1.PublisherClient()
     topic = publisher.topic_path(PROJECT_ID, TOPIC_NAME)
-    data = None
+    data = b'https://m.ctrip.com/webapp/flight/schedule/detail.html'
     publisher.publish(topic, data)
-
-    print('Topic created: {}'.format(topic))
     return 'OK'
 
 def test_job():
-    print()
+    print('TODO')
 
 if __name__ == "__main__":
     test_job()
