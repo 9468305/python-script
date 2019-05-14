@@ -19,7 +19,7 @@ def run(url):
     try:
         payload = {"url": url,
                    "category": "performance",
-                   "locale": "zh",
+                   "locale": "zh-CN",
                    "strategy": "mobile",
                    "key": API_KEY
                    }
