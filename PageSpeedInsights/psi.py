@@ -2,34 +2,33 @@
 # -*- coding: utf-8 -*-
 '''PageSpeed Insights Single + Google Cloud Functions'''
 import os
-from googleapiclient.discovery import build
+import requests
 
 # Access Token, generated from GCP Console Credentials page.
 API_KEY = os.getenv('GCP_API_KEY')
 
-# For local development, setup http proxy as needed.
-HTTP = None
+GAPI_PSI = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
-URL = "https://m.ctrip.com/webapp/flight/schedule/detail.html"
+SESSION = requests.Session()
+
+PROXIES = None
+
 
 def run(url):
-    pagespeedonline = build(
-        serviceName = 'pagespeedonline',
-        version = 'v5',
-        http = HTTP,
-        developerKey = API_KEY
-    )
-    response = pagespeedonline.pagespeedapi().runpagespeed(url = url).execute()
-    print(response)
+    try:
+        payload = {"url": url,
+                   "category": "performance",
+                   "locale": "zh",
+                   "strategy": "mobile",
+                   "key": API_KEY
+                   }
+        response = SESSION.get(url=GAPI_PSI, params=payload, proxies=PROXIES)
+        print(response.status_code)
+        print(response.json())
+    except requests.RequestException as _e:
+        print(_e)
     return ('OK', 200)
 
-def run_http(request):
-    request_json = request.get_json()
-    try:
-        url = request_json['url']
-        return run(url)
-    except KeyError:
-        return ('', 400)
 
 def run_pubsub(event, context):
     import base64
@@ -37,20 +36,24 @@ def run_pubsub(event, context):
     run(pubsub_message)
     return 'OK'
 
-def test_run_http():
-    from flask import Request
-    _request = Request.from_values(json = { "url": URL })
-    run_http(_request)
 
-def test_run_pubsub():
+def test_run_http(test_url):
+    run(test_url)
+
+
+def test_run_pubsub(test_url):
     import base64
-    event = { "data": base64.urlsafe_b64encode(URL.encode('utf-8'))}
+    event = {"data": base64.urlsafe_b64encode(test_url.encode('utf-8'))}
     context = None
     run_pubsub(event, context)
 
-if __name__ == "__main__":
-    import httplib2
-    HTTP = httplib2.Http(proxy_info = httplib2.ProxyInfo(httplib2.socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 1086))
 
-    test_run_http()
-    test_run_pubsub()
+if __name__ == "__main__":
+    PROXIES = {
+        "http": "127.0.0.1:1087",
+        "https": "127.0.0.1:1087",
+    }
+
+    _test_url = "https://m.ctrip.com/webapp/flight/schedule/detail.html"
+    test_run_http(_test_url)
+    test_run_pubsub(_test_url)
