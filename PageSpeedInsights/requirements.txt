@@ -1,3 +1,3 @@
-# Function dependencies, for example:
+# Function dependencies
 requests==2.21.0
 google-cloud-pubsub==0.40.0

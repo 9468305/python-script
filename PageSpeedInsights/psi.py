@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 '''PageSpeed Insights Single + Google Cloud Functions'''
 import os
+import base64
 import requests
 
 # Access Token, generated from GCP Console Credentials page.
@@ -27,14 +28,12 @@ def run(url):
         print(response.json())
     except requests.RequestException as _e:
         print(_e)
-    return ('OK', 200)
+    return 'OK'
 
 
 def run_pubsub(event, context):
-    import base64
     pubsub_message = base64.urlsafe_b64decode(event['data']).decode('utf-8')
-    run(pubsub_message)
-    return 'OK'
+    return run(pubsub_message)
 
 
 def test_run_http(test_url):
@@ -42,7 +41,6 @@ def test_run_http(test_url):
 
 
 def test_run_pubsub(test_url):
-    import base64
     event = {"data": base64.urlsafe_b64encode(test_url.encode('utf-8'))}
     context = None
     run_pubsub(event, context)
