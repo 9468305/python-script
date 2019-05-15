@@ -3,7 +3,6 @@
 '''PageSpeed Insights Single + Google Cloud Functions'''
 import os
 import base64
-import json
 from urllib import parse
 import requests
 from google.cloud import storage
