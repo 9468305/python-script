@@ -3,7 +3,11 @@
 '''PageSpeed Insights Single + Google Cloud Functions'''
 import os
 import base64
+import json
+from urllib import parse
 import requests
+from google.cloud import storage
+from google.cloud.storage import Blob
 
 # Access Token, generated from GCP Console Credentials page.
 API_KEY = os.getenv('GCP_API_KEY')
@@ -13,6 +17,14 @@ GAPI_PSI = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 SESSION = requests.Session()
 
 PROXIES = None
+
+
+def save(url, report):
+    '''Save to https://console.cloud.google.com/storage/browser/[bucket-id]/'''
+    client = storage.Client()
+    bucket = client.get_bucket("psi-report")
+    blob = Blob(f"${parse.quote_plus(url)}.json", bucket)
+    blob.upload_from_string(report, "application/json")
 
 
 def run(url):
@@ -25,7 +37,8 @@ def run(url):
                    }
         response = SESSION.get(url=GAPI_PSI, params=payload, proxies=PROXIES)
         print(response.status_code)
-        print(response.json())
+        if 200 == response.status_code:
+            save(url, response.text)
     except requests.RequestException as _e:
         print(_e)
     return 'OK'
@@ -47,25 +60,11 @@ def test_run_pubsub(test_url):
 
 
 if __name__ == "__main__":
+    _proxy = os.getenv("HTTP_PROXY")
     PROXIES = {
-        "http": "127.0.0.1:1087",
-        "https": "127.0.0.1:1087",
+        "http": _proxy,
+        "https": _proxy,
     }
-
     _test_url = "https://m.ctrip.com/webapp/flight/schedule/detail.html"
     test_run_http(_test_url)
     test_run_pubsub(_test_url)
-
-
-"""
-from google.cloud import storage
-client = storage.Client()
-# https://console.cloud.google.com/storage/browser/[bucket-id]/
-bucket = client.get_bucket('bucket-id-here')
-# Then do other things...
-blob = bucket.get_blob('remote/path/to/file.txt')
-print(blob.download_as_string())
-blob.upload_from_string('New contents!')
-blob2 = bucket.blob('remote/path/storage.txt')
-blob2.upload_from_filename(filename='/local/path.txt')
-"""
