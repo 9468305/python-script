@@ -2,9 +2,10 @@ PageSpeed Insights
 --------
 With Google Cloud Platform / Cloud Functions.
 
-Setup
+### Setup
+
 > pip3 install -r requirements.txt
 
-or
-> pip3 install --upgrade requests  
-> pip3 install --upgrade google-api-python-client
+### Doc
+
+[前端DevOps之PageSpeed Insights](https://www.jianshu.com/p/b64722af06fa)
