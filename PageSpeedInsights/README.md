@@ -105,6 +105,8 @@ PSI API是Google RESTful APIs之一， 仅需一次 HTTP 请求 ，应答返回�
 
 #### 2.1 系统流程图
 
+![workflow](image/psi.mermaid.svg)
+
 #### 2.2 Cloud Scheduler
 
 Cloud Scheduler 是 GCP 的一项全托管式企业级 cron 作业调度服务。支持 App Engine、Cloud Pub/Sub 和任意 HTTP 端点，允许作业触发 Compute Engine、Google Kubernetes Engine 和本地资源。  
