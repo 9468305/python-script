@@ -105,47 +105,6 @@ PSI API是Google RESTful APIs之一， 仅需一次 HTTP 请求 ，应答返回�
 
 #### 2.1 系统流程图
 
-```mermaid
-graph TB
-    Job(定时作业任务)
-    CPS_Job_P(Job Publisher)
-    CPS_Job_S(Job Subscriber)
-    CPS_PSI_P(PSI Publisher)
-    CPS_PSI_S(PSI Subscriber)
-    CF_Job(Job Function Service)
-    CF_PSI(PSI Function Service)
-    GAPI_PSI(PageSpeed Insights API)
-
-    Job -->|Push| CPS_Job_P
-    CPS_Job_S -->|Push| CF_Job
-    CF_Job -->| 并发 HTTP | CPS_PSI_P
-    CPS_PSI_S -->| 并发 Push | CF_PSI
-    CF_PSI -->| 并发 HTTP Request | GAPI_PSI
-
-    subgraph Cloud Scheduler
-        Job
-    end
-
-    subgraph Cloud Pub/Sub
-    subgraph Job Pub/Sub
-    CPS_Job_P --> CPS_Job_S
-    end
-
-    subgraph PSI Pub/Sub
-    CPS_PSI_P --> CPS_PSI_S
-    end
-    end
-
-    subgraph Cloud Functions
-    CF_Job
-    CF_PSI
-    end
-
-    subgraph Google APIs
-    GAPI_PSI
-    end
-```
-
 #### 2.2 Cloud Scheduler
 
 Cloud Scheduler 是 GCP 的一项全托管式企业级 cron 作业调度服务。支持 App Engine、Cloud Pub/Sub 和任意 HTTP 端点，允许作业触发 Compute Engine、Google Kubernetes Engine 和本地资源。  
