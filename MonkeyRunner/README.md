@@ -1,4 +1,4 @@
-### uiparser (MonkeyRunner is DEAD!)
+### uiparser ( MonkeyRunner is DEAD )
 
 Setup
 > export ANDROID_HOME="/Users/chenqi/Library/Android/sdk"
