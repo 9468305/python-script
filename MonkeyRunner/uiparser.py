@@ -69,6 +69,6 @@ def uiparser():
 
 
 if __name__ == "__main__":
-    # MonkeyRunner Jython version is 2.5.3 (Stupid!)
+    # MonkeyRunner Jython version is 2.5.3 (Outdated!)
     logging.info(sys.version)
     uiparser()
