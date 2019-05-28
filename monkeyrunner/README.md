@@ -18,7 +18,7 @@ PC 端 GUI 工具，扫描和分析 Android 设备上当前显示的 UI 组件�
 
 其内部实现基于 `adb shell uiautomator dump` 。从源码仓库提交记录看，主要功能开发的活跃时间是 2014-2015，2016之后已经很少更新维护。那个年代的 Android 开发主要使用 Eclipse ， 所以基于 SWT 实现多平台 PC GUI ，在当时合理。
 
-该工具实际使用运行不稳定，极易报错，常见：`Error while obtaining UI hierarchy XML file: com.android.ddmlib.SyncException: Remote object doesn't exist!`  
+该工具实际使用运行不稳定，极易报错：`Error while obtaining UI hierarchy XML file: com.android.ddmlib.SyncException: Remote object doesn't exist!`  
 
 错误原因通常是：
 
@@ -60,7 +60,7 @@ $ANDROID_HOME/tools/bin/monkeyrunner uiparser.py
 
 ### 3. 缺陷
 
-MonkeyRunner 基于 Jython version 2.5.3 。看上去结合了Java和Python的优势，实际对于Java和Python编程都不友好。  
+MonkeyRunner 基于 Jython 2.5.3 。看上去结合了Java和Python的优势，实际对于Java和Python编程都不友好。  
 
 + Jython 2.5.3 过时，主流的Python 3.x和2.7的很多语法和库无法使用。
 + 使用vscode等编辑器编码时，缺少智能提示和自动补全。编辑器和pylint无法识别导入的库， 例如 `from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage` 。
@@ -130,12 +130,12 @@ events: prints out accessibility events until terminated
 
 ### uiautomator 源码
 
+PC端工具源码位于仓库 https://android.googlesource.com/platform/frameworks/testing/ 的 `master` 分支，最新更新于 2014.11.14。之后活跃分支变更为 `android-support-test` 分支。`uiautomator` 源码被移除，改成 `android.support.test library, expresso` 等工具的源码工程。  
+手机端框架源码位于仓库 https://android.googlesource.com/platform/frameworks/base/ 的 `master` 分支。  
 关键代码 `uiAutomation.waitForIdle(1000, 1000 * 10);` 即单次超时等待1秒，最长超时等待10秒。超时抛出异常。
 
 `DumpCommand.java`  
 > https://android.googlesource.com/platform/frameworks/testing/+/master/uiautomator/cmds/uiautomator/src/com/android/commands/uiautomator/DumpCommand.java  
-
-TODO: choose right branch
 
 ```Java
 // It appears that the bridge needs time to be ready. Making calls to the
@@ -166,7 +166,7 @@ System.out.println(
 ```
 
 `UiAutomation.java`  
-> https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/UiAutomation.java
+> https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/UiAutomation.java
 
 ```Java
 /**
@@ -218,6 +218,13 @@ public void waitForIdle(long idleTimeoutMillis, long globalTimeoutMillis)
 }
 ```
 
-## hierarchyviewer2
+## Android Device Monitor
 
-TODO
+https://developer.android.com/studio/profile/monitor
+
+Android SDK 工具集的 `Android Device Monitor` 已废弃。
+
+>Android Device Monitor was deprecated in Android Studio 3.1 and removed from Android Studio 3.2. The features that you could use through the Android Device Monitor have been replaced by new features. The table below helps you decide which features you should use instead of these deprecated and removed features.
+
+官方给出的替代品 `Layout Inspector` 功能更强大，界面也更美观，但目前还不成熟，相比 iOS 神器 [Reveal](https://revealapp.com/) ， 仍需努力。  
+https://developer.android.com/studio/debug/layout-inspector
