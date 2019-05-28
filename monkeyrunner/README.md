@@ -34,7 +34,7 @@ https://developer.android.com/studio/test/monkeyrunner
 
 官方提供的另外一个工具，封装 uiautomator API，供 Python 脚本调用，也可注入 java 扩展插件。相比 `uiautomatorviewer` 和 `uiautomator` 命令行工具，可编程扩展性更佳。
 
-MonkeyRunner 使用了比较冷门的 Jython 实现。我参照官方文档实现了一个Demo。详见 [uiparser.py](https://github.com/9468305/python-script/blob/master/monkeyrunner/uiparser.py) 。
+MonkeyRunner 使用了比较冷门的 Jython 实现。
 
 ### 1. 启动运行入口
 
@@ -228,3 +228,9 @@ Android SDK 工具集的 `Android Device Monitor` 已废弃。
 
 官方给出的替代品 `Layout Inspector` 功能更强大，界面也更美观，但目前还不成熟，相比 iOS 神器 [Reveal](https://revealapp.com/) ， 仍需努力。  
 https://developer.android.com/studio/debug/layout-inspector
+
+## uiparser
+
+参照 MonkeyRunner 官方文档实现的 Python Demo。
+
+https://github.com/9468305/python-script/blob/master/monkeyrunner/uiparser.py
