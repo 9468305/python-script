@@ -233,4 +233,4 @@ https://developer.android.com/studio/debug/layout-inspector
 
 参照 MonkeyRunner 官方文档实现的 Python Demo。
 
-https://github.com/9468305/python-script/blob/master/monkeyrunner/uiparser.py
+https://github.com/9468305/python-script/tree/master/monkeyrunner
