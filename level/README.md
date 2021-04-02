@@ -1,17 +1,24 @@
-### Python leveldb Utils 常用方法封装。  
-[leveldb](http://leveldb.org/)是Google开源的一个轻量级，高性能，KeyValue 存储数据库。作者是Google战神Jeff Dean，基于他自己的BigTable论文，使用C++ POSIX实现。  
+### Python leveldb Utils 常用方法封装。
+
+[leveldb](http://leveldb.org/)是Google开源的一个轻量级，高性能，KeyValue 存储数据库。作者是Google战神Jeff Dean，基于他自己的BigTable论文，使用C++ POSIX实现。
+
 > LevelDB is a light-weight, single-purpose library for persistence with bindings to many platforms.
 
 官网 http://leveldb.org/  
 GitHub https://github.com/google/leveldb  
 官方 Javascript Binding https://github.com/Level/levelup  
+
 ### Python Binding
+
 早期官方仅提供C++和Javascript。Python实现均是第三方开发。其中使用较广泛和稳定的是 https://github.com/rjpower/py-leveldb 。目前处于稳定运行，维护停滞状态。  
 在Python爬虫实现过程中，常常需要快速简单处理存储大量数据至本地文件，构建SQL数据库表过于复杂，变更不灵活。使用JSON文本格式，缺乏索引，过滤，随机增删数据。因此leveldb是一种轻便快捷的最佳解决方案。  
 
 这里封装了一些常用方法，均是日常爬虫数据采集存储的常用方法。  
+
 ### exist()
+
 判断key是否存在于database中。返回Boolean值。  
+
 ```Python
 def exist(db_src, key):
     try:
@@ -22,7 +29,9 @@ def exist(db_src, key):
 ```
 
 ### count()
+
 统计database中数据总量计数，支持key过滤子字符串，value过滤子字符串，返回总数和过滤后有效总数。
+
 ```Python
 def count(db_src, k_filter, v_filter):
     total, valid = 0, 0
@@ -39,7 +48,9 @@ def count(db_src, k_filter, v_filter):
 ```
 
 ### copy()
+
 从源库到目标库，拷贝database，支持key过滤子字符串。返回源库总数和过滤后有效拷贝总数。  
+
 ```Python
 def copy(db_src, db_dst, k_filter):
     total, valid = 0, 0
@@ -56,7 +67,9 @@ def copy(db_src, db_dst, k_filter):
 ```
 
 ### delete()
+
 删除目标库中与源库相同key的数据项。  
+
 ```Python
 def delete(db_src, db_dst):
     for _k, _v in db_src.RangeIter():
@@ -64,7 +77,9 @@ def delete(db_src, db_dst):
 ```
 
 ### diff()
+
 查找源库与目标库的key值差异数据项，存储至差异库。返回差异项总数。  
+
 ```Python
 def diff(db_src, db_dst, db_diff):
     diff_count = 0
@@ -76,7 +91,9 @@ def diff(db_src, db_dst, db_diff):
 ```
 
 ### clean_copy()
+
 拷贝源库至目标库，并删除value值为空的数据项。返回拷贝总数。  
+
 ```Python
 def clean_copy(db_src, db_dst):
     total = 0
@@ -89,8 +106,10 @@ def clean_copy(db_src, db_dst):
 ```
 
 ### dump()
+
 打印输出当前数据库中所有key value数据。  
 安全兼容：当参数是字符串时，当作本地路径文件名处理，临时打开数据库。  
+
 ```Python
 def dump(db_src):
     _db = leveldb.LevelDB(db_src, create_if_missing=False) if isinstance(db_src, str) else db_src
@@ -99,8 +118,10 @@ def dump(db_src):
 ```
 
 ### db_to_text()
+
 导出leveldb数据库至文本文件，以','分隔。  
 安全兼容：当参数是字符串时，当作本地路径文件名处理，临时打开数据库。  
+
 ```Python
 def db_to_text(from_db, to_text):
     _db = leveldb.LevelDB(from_db, create_if_missing=False) if isinstance(from_db, str) else from_db
@@ -110,8 +131,10 @@ def db_to_text(from_db, to_text):
 ```
 
 ### text_to_db()
+
 从文本文件导入至leveldb数据库。参数支持自定义分隔符。  
 安全兼容：当参数是字符串时，当作本地路径文件名处理，临时打开数据库。  
+
 ```Python
 def text_to_db(from_text, to_db, split_char):
     total, invalid = 0, 0
@@ -134,9 +157,11 @@ def text_to_db(from_text, to_db, split_char):
 ```
 
 ### db_to_excel()
+
 导出leveldb数据库至Excel文件，返回总数。  
 Excel文件共2列，分别对应leveldb的Key，Value。  
 安全兼容：当参数是字符串时，当作本地路径文件名处理，临时打开数据库。  
+
 ```Python
 def db_to_excel(from_db, to_excel):
     _db = leveldb.LevelDB(from_db, create_if_missing=False) if isinstance(from_db, str) else from_db
@@ -151,9 +176,11 @@ def db_to_excel(from_db, to_excel):
 ```
 
 ### excel_to_db()
+
 从Excel文件导入至leveldb数据库。  
 仅读取Excel文件中的前2列数据，对应leveldb的Key，Value。  
 安全兼容：当参数是字符串时，当作本地路径文件名处理，临时打开数据库。  
+
 ```Python
 def excel_to_db(from_excel, to_db):
     _wb = load_workbook(from_excel, read_only=True)
@@ -175,9 +202,8 @@ def excel_to_db(from_excel, to_db):
     _wb.close()
     return total
 ```
-### 源码见GitHub
-https://github.com/9468305/python-script/tree/master/level  
 
 ### 后记
+
 这篇文档整理完成时，leveldb官网已经推出官方Python版本。  
 详见 https://plyvel.readthedocs.io/en/latest/  

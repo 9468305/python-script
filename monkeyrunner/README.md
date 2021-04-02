@@ -15,7 +15,7 @@ Android 平台所有自动化测试框架的底层实现都依赖官方提供的
 PC 端 GUI 工具，扫描和分析 Android 设备上当前显示的 UI 组件。展示 UI 布局层次结构，查看设备上当前对用户可见的 UI 组件的属性。从名称可以看出，它是 UI Automator 的只读功能部分，即只能查看 UI 组件的树形结构和属性，不能操作控制 UI 组件。
 
 `uiautomatorviewer` 位于 `<android-sdk>/tools/bin` 目录。  
-启动入口是一个bash文件，实际调用 `<android-sdk>/tools/lib` 目录的 `uiautomatorviewer-26.0.0-dev.jar` 。   
+启动入口是一个bash文件，实际调用 `<android-sdk>/tools/lib` 目录的 `uiautomatorviewer-26.0.0-dev.jar` 。  
 GUI 基于 Eclipse + SWT 实现，使用 Gradle 构建。  
 系列工具源码在 `https://android.googlesource.com/platform/tools/swt/` 。
 依赖 `https://android.googlesource.com/platform/tools/base/` 。  
@@ -249,7 +249,3 @@ https://developer.android.com/studio/debug/layout-inspector
 参照 MonkeyRunner 官方文档实现的 Python Demo。
 
 https://github.com/9468305/python-script/tree/master/monkeyrunner
-
-## TODO
-
-基于上述问题，我准备写一个更智能更稳定更高效的 UI Inspecotr ，基于 AndroidX UIAutomation ，使用 Kotlin 实现。
