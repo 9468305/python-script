@@ -1,10 +1,9 @@
 ### 背景
 
-[携程旅行网 云海竞赛平台](https://yunhai.ctrip.com)举办算法竞赛，携程机票事业部与飞常准合作命题[携程机票航班延误预测算法大赛](https://yunhai.ctrip.com/Games/11)，希望以此提升航班延误的预测准确性。  
-验收评测竞赛提交算法的结果核算算法使用R语言实现，但云海平台仅支持Python语言，因此实现一份Python版。
+2017年某算法竞赛平台出题，飞机航班延误预测算法，需要验收提交答案的准确性。
 
-源数据样本csv格式说明：[航班动态起降数据集](https://www.kesci.com/apps/home/dataset/59793a5a0d84640e9b2fedd3)。  
-提交预测样本csv格式说明：[submission_sample.csv](http://ofy9izzlw.bkt.clouddn.com/ctrip_fligtht/submission_sample.csv)。  
+源数据样本csv格式：失效，省略。  
+提交预测样本csv格式说明：失效，省略。  
 示例：
 
 Flightno | FlightDepcode | FlightArrcode | PlannedDeptime | PlannedArrtime | prob
@@ -14,9 +13,8 @@ CA1351 | PEK | CAN | 1496273700 | 1496285700 | 0.041386555
 CZ6299 | DLC | SZX | 1496274000 | 1496286900 | 0.025210084
 HU7377 | URC | CKG | 1496273700 | 1496287500 | 0.106757728
 
-本次比赛采用PR曲线的AUC（baseline：auc=0.45）。  
-评估指标参考文献：http://mark.goadrich.com/articles/davisgoadrichcamera2.pdf  
-  
+本次比赛采用PR曲线的AUC（baseline：auc=0.45）。评估指标参考：[The Relationship Between Precision-Recall and ROC Curves](http://mark.goadrich.com/articles/davisgoadrichcamera2.pdf)
+
 ### 实现
 
 csv文件读取使用pandas库。
